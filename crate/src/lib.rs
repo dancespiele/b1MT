@@ -2,17 +2,22 @@
 
 #[macro_use]
 extern crate cfg_if;
+#[macro_use]
+extern crate serde;
 
+extern crate inflector;
+extern crate js_sys;
 extern crate wasm_bindgen;
 extern crate web_sys;
 extern crate yew;
-extern crate yew_router;
 extern crate yew_styles;
 
 use wasm_bindgen::prelude::*;
 
 mod app;
-mod pages;
+mod config;
+mod lang;
+mod screens;
 use app::App;
 
 cfg_if! {
