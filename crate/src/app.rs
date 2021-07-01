@@ -1,6 +1,9 @@
-use crate::screens::{Buy, Contact, Home, Info, Stake};
+use crate::config::Config;
+use crate::lang::Translations;
+use crate::screens::{Buy, Contact, Home, Info, RoadMap, Stake};
 use yew::prelude::*;
 use yew::services::ConsoleService;
+use yew::utils::document;
 use yew_styles::{
     carousel::{Carousel, CarouselDot},
     layouts::{
@@ -19,6 +22,7 @@ use yew_styles::{
 pub struct App {
     navbar_items: Vec<bool>,
     link: ComponentLink<Self>,
+    lang: Translations,
 }
 
 pub enum Msg {
@@ -34,6 +38,7 @@ impl Component for App {
         App {
             navbar_items: vec![true, false, false, false, false, false],
             link,
+            lang: Config::get_lang(),
         }
     }
 
@@ -81,6 +86,18 @@ impl Component for App {
         false
     }
 
+    fn rendered(&mut self, first_render: bool) {
+        if first_render {
+            for (i, _) in self.navbar_items.clone().into_iter().enumerate() {
+                self.navbar_items[i] = false;
+            }
+
+            let screen = get_param();
+            let screen_index = set_screen_index(&screen);
+            self.link.send_message(Msg::ChangeNavbarItem(screen_index));
+        }
+    }
+
     fn view(&self) -> Html {
         html! {
             <div class="root">
@@ -91,7 +108,7 @@ impl Component for App {
                     branch=html!{<img src="./1MTlite2.png"/>}
                 >
                     <NavbarContainer>
-                        {get_navbar(self.navbar_items.to_vec(), self.link.clone())}
+                        {get_navbar(self.navbar_items.to_vec(), self.lang.clone(), self.link.clone())}
                     </NavbarContainer>
                 </Navbar>
 
@@ -119,8 +136,16 @@ impl Component for App {
     }
 }
 
-fn get_navbar(items: Vec<bool>, link: ComponentLink<App>) -> Html {
-    let menus = vec!["Home", "Info", "Buy", "Stake", "Road map", "Contact Us"];
+fn get_navbar(items: Vec<bool>, lang: Translations, link: ComponentLink<App>) -> Html {
+    let menus = vec![
+        lang.home,
+        lang.tokenomics,
+        lang.buy,
+        lang.stake,
+        lang.road_map,
+        lang.community,
+    ];
+
     let mut navbar_items = vec![];
 
     for (i, _) in items.clone().into_iter().enumerate() {
@@ -129,7 +154,7 @@ fn get_navbar(items: Vec<bool>, link: ComponentLink<App>) -> Html {
                 active = items[i]
                 onclick_signal = link.callback(move |_| Msg::ChangeNavbarItem(i))
                 >
-                {get_text(menus[i])}
+                {get_text(menus[i].as_str())}
             </NavbarItem>
         })
     }
@@ -147,15 +172,34 @@ fn get_text(text: &str) -> Html {
     }
 }
 
+fn get_param() -> String {
+    let url = document().location().unwrap().pathname().unwrap();
+
+    let url = url.replace("/", "");
+
+    url
+}
+
 fn get_content(index: usize) -> Html {
     match index {
         0 => html! {<Home/>},
         1 => html! {<Info/>},
         2 => html! {<Buy/>},
         3 => html! {<Stake/>},
-        4 => get_text("Road map"),
+        4 => html! {<RoadMap/>},
         5 => html! {<Contact/>},
-        _ => get_text("Home"),
+        _ => html! {<Home/>},
+    }
+}
+
+fn set_screen_index(screen: &str) -> usize {
+    match screen {
+        "info" => 1,
+        "buy" => 2,
+        "stake" => 3,
+        "roadmap" => 4,
+        "community" => 5,
+        &_ => 0,
     }
 }
 

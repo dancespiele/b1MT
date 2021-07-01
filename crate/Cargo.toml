@@ -25,7 +25,7 @@ serde_json = "1.0"
 dotenv = "0.15"
 failure = "0.1"
 yew = { version="0.18", features = ["toml", "yaml", "msgpack", "cbor", "web_sys"]}
-web-sys = { version = "0.3", features = ["Navigator", "FormData"]}
+web-sys = { version = "0.3", features = ["Navigator", "FormData", "HtmlCanvasElement", "CanvasRenderingContext2d", "Location"]}
 yew_styles = { version="0.9.2", features = ["full"]}
 js-sys = "0.3"
 Inflector = "0.11"
