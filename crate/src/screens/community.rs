@@ -8,9 +8,9 @@ use yew_styles::layouts::{
 use yew_styles::styles::Style;
 use yew_styles::text::{Header, Text, TextType};
 
-pub struct Contact;
+pub struct Community;
 
-impl Component for Contact {
+impl Component for Community {
     type Message = ();
     type Properties = ();
 

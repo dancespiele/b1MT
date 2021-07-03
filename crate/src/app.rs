@@ -1,9 +1,16 @@
 use crate::config::Config;
 use crate::lang::Translations;
-use crate::screens::{Buy, Contact, Home, Info, RoadMap, Stake};
+use crate::screens::{Buy, Community, Home, Info, RoadMap, Stake};
 use yew::prelude::*;
 use yew::services::ConsoleService;
-use yew::utils::document;
+use yew::utils::{document};
+use yew_router::{
+    agent::{RouteAgent, RouteRequest},
+    prelude::*,
+    route::Route,
+    switch::Permissive,
+    Switch,
+};
 use yew_styles::{
     carousel::{Carousel, CarouselDot},
     layouts::{
@@ -23,11 +30,33 @@ pub struct App {
     navbar_items: Vec<bool>,
     link: ComponentLink<Self>,
     lang: Translations,
+    route_agent: Box<dyn Bridge<RouteAgent<()>>>,
+    route: Route<()>,
+}
+
+#[derive(Switch, Debug, Clone)]
+pub enum AppRouter {
+    #[to = "/!"]
+    HomePath,
+    #[to = "/info!"]
+    InfoPath,
+    #[to = "/buy!"]
+    BuyPath,
+    #[to = "/stake"]
+    StakePath,
+    #[to = "/roadmap"]
+    RoadMapPath,
+    #[to = "/community"]
+    CommunityPath,
+    #[to = "/page-not-found"]
+    PageNotFound(Permissive<String>),
 }
 
 pub enum Msg {
     ChangeNavbarItem(usize),
+    NavbarItemInit(usize),
     ScrollMenu(WheelEvent),
+    UpdateRoute(Route<()>),
 }
 
 impl Component for App {
@@ -35,21 +64,33 @@ impl Component for App {
     type Properties = ();
 
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
+        let route = Route::from("/".to_string());
+        let callback_route = link.callback(Msg::UpdateRoute);
+        let route_agent = RouteAgent::bridge(callback_route);
+
         App {
             navbar_items: vec![true, false, false, false, false, false],
             link,
             lang: Config::get_lang(),
+            route,
+            route_agent,
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Msg::ChangeNavbarItem(index) => {
+            Msg::NavbarItemInit(index) => {
                 for (i, _) in self.navbar_items.clone().into_iter().enumerate() {
                     self.navbar_items[i] = false;
                 }
 
                 self.navbar_items[index] = true;
+            }
+            Msg::ChangeNavbarItem(index) => {
+                self.route_agent.send(RouteRequest::ChangeRoute(Route {
+                    route: get_route(index),
+                    state: (),
+                }))
             }
             Msg::ScrollMenu(wheel_event) => {
                 let len = self.navbar_items.len();
@@ -61,22 +102,34 @@ impl Component for App {
                 if wheel_event.delta_y() < 0.00 {
                     if let Some(index) = index_opt {
                         if index == 0 {
-                            self.navbar_items[0] = true
+                            self.navbar_items[0] = true;
+                            self.link.send_message(Msg::ChangeNavbarItem(0))
                         } else {
-                            self.navbar_items[index - 1] = true
+                            self.navbar_items[index - 1] = true;
+                            self.link.send_message(Msg::ChangeNavbarItem(index - 1))
                         }
                     } else {
                         ConsoleService::error("no image active")
                     }
                 } else if let Some(index) = index_opt {
                     if index == len - 1 {
-                        self.navbar_items[len - 1] = true
+                        self.navbar_items[len - 1] = true;
+                        self.link.send_message(Msg::ChangeNavbarItem(len - 1))
                     } else {
-                        self.navbar_items[index + 1] = true
+                        self.navbar_items[index + 1] = true;
+                        self.link.send_message(Msg::ChangeNavbarItem(index + 1))
                     }
                 } else {
                     ConsoleService::error("no image active")
                 }
+            }
+            Msg::UpdateRoute(route) => {
+                let index = get_screen_index(&route.route);
+                for (i, _) in self.navbar_items.clone().into_iter().enumerate() {
+                    self.navbar_items[i] = false;
+                }
+                self.navbar_items[index] = true;
+                self.route = route;
             }
         }
         true
@@ -93,8 +146,8 @@ impl Component for App {
             }
 
             let screen = get_param();
-            let screen_index = set_screen_index(&screen);
-            self.link.send_message(Msg::ChangeNavbarItem(screen_index));
+            let screen_index = get_screen_index(&screen);
+            self.link.send_message(Msg::NavbarItemInit(screen_index));
         }
     }
 
@@ -116,7 +169,29 @@ impl Component for App {
 
                     <Container direction=Direction::Row wrap=Wrap::Wrap class_name="screen" justify_content=JustifyContent::FlexStart(Mode::NoMode)>
                         <Item layouts=vec!(ItemLayout::ItXs(11)) align_self=AlignSelf::Center class_name="content">
-                            {get_content(get_position(self.navbar_items.to_vec()))}
+                        <Router<AppRouter, ()>
+                            render = Router::render(|switch: AppRouter| {
+                                match switch {
+                                    AppRouter::HomePath => html! {
+                                        <Home/>
+                                    },
+                                    AppRouter::InfoPath => html! {
+                                        <Info/>
+                                    },
+                                    AppRouter::BuyPath => html! {
+                                        <Buy/>
+                                    },
+                                    AppRouter::StakePath => html!{<Stake/>},
+                                    AppRouter::RoadMapPath => html!{<RoadMap/>},
+                                    AppRouter::CommunityPath => html!{<Community/>},
+                                    AppRouter::PageNotFound(Permissive(None)) => html!{<h1>{"Page not found"}</h1>},
+                                    AppRouter::PageNotFound(Permissive(Some(missed_route))) => html!{<h1>{format!("Page '{}' not found", missed_route)}</h1>}
+                                }
+                            })
+                            redirect = Router::redirect(|route: Route<()>| {
+                                AppRouter::PageNotFound(Permissive(Some(route.route)))
+                            })
+                        />
                         </Item>
 
                         <Item layouts=vec!(ItemLayout::ItXs(1)) align_self=AlignSelf::Center class_name="content">
@@ -173,38 +248,30 @@ fn get_text(text: &str) -> Html {
 }
 
 fn get_param() -> String {
-    let url = document().location().unwrap().pathname().unwrap();
-
-    let url = url.replace("/", "");
-
-    url
+    document().location().unwrap().pathname().unwrap()
 }
 
-fn get_content(index: usize) -> Html {
+fn get_route(index: usize) -> String {
     match index {
-        0 => html! {<Home/>},
-        1 => html! {<Info/>},
-        2 => html! {<Buy/>},
-        3 => html! {<Stake/>},
-        4 => html! {<RoadMap/>},
-        5 => html! {<Contact/>},
-        _ => html! {<Home/>},
+        0 => String::from("/"),
+        1 => String::from("/info"),
+        2 => String::from("/buy"),
+        3 => String::from("/stake"),
+        4 => String::from("/roadmap"),
+        5 => String::from("/community"),
+        _ => String::from("/"),
     }
 }
 
-fn set_screen_index(screen: &str) -> usize {
+fn get_screen_index(screen: &str) -> usize {
     match screen {
-        "info" => 1,
-        "buy" => 2,
-        "stake" => 3,
-        "roadmap" => 4,
-        "community" => 5,
+        "/info" => 1,
+        "/buy" => 2,
+        "/stake" => 3,
+        "/roadmap" => 4,
+        "/community" => 5,
         &_ => 0,
     }
-}
-
-fn get_position(items: Vec<bool>) -> usize {
-    items.into_iter().position(|item| item).unwrap_or(0)
 }
 
 fn get_dots(items: Vec<bool>, link: ComponentLink<App>) -> Html {
