@@ -2,6 +2,7 @@
 pub struct Translations {
     pub home: String,
     pub tokenomics: String,
+    pub use_cases: String,
     pub buy: String,
     pub stake: String,
     pub road_map: String,
@@ -16,6 +17,9 @@ pub struct Translations {
     pub automata_token: String,
     pub cross_swap: String,
     pub governance_web: String,
+    pub partner_with_1mt: String,
+    pub partner_with_1mt_description: String,
+    pub vegas_casino_description: String,
 }
 
 #[derive(Deserialize)]

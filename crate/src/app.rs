@@ -1,9 +1,9 @@
 use crate::config::Config;
 use crate::lang::Translations;
-use crate::screens::{Buy, Community, Home, Info, RoadMap, Stake};
+use crate::screens::{Buy, Community, Home, Info, RoadMap, Stake, UseCases};
 use yew::prelude::*;
 use yew::services::ConsoleService;
-use yew::utils::{document};
+use yew::utils::document;
 use yew_router::{
     agent::{RouteAgent, RouteRequest},
     prelude::*,
@@ -40,6 +40,8 @@ pub enum AppRouter {
     HomePath,
     #[to = "/info!"]
     InfoPath,
+    #[to = "/use-cases"]
+    UseCasesPath,
     #[to = "/buy!"]
     BuyPath,
     #[to = "/stake"]
@@ -69,7 +71,7 @@ impl Component for App {
         let route_agent = RouteAgent::bridge(callback_route);
 
         App {
-            navbar_items: vec![true, false, false, false, false, false],
+            navbar_items: vec![true, false, false, false, false, false, false],
             link,
             lang: Config::get_lang(),
             route,
@@ -178,6 +180,9 @@ impl Component for App {
                                     AppRouter::InfoPath => html! {
                                         <Info/>
                                     },
+                                    AppRouter::UseCasesPath => html! {
+                                        <UseCases/>
+                                    },
                                     AppRouter::BuyPath => html! {
                                         <Buy/>
                                     },
@@ -215,6 +220,7 @@ fn get_navbar(items: Vec<bool>, lang: Translations, link: ComponentLink<App>) ->
     let menus = vec![
         lang.home,
         lang.tokenomics,
+        lang.use_cases,
         lang.buy,
         lang.stake,
         lang.road_map,
@@ -255,10 +261,11 @@ fn get_route(index: usize) -> String {
     match index {
         0 => String::from("/"),
         1 => String::from("/info"),
-        2 => String::from("/buy"),
-        3 => String::from("/stake"),
-        4 => String::from("/roadmap"),
-        5 => String::from("/community"),
+        2 => String::from("/use-cases"),
+        3 => String::from("/buy"),
+        4 => String::from("/stake"),
+        5 => String::from("/roadmap"),
+        6 => String::from("/community"),
         _ => String::from("/"),
     }
 }
@@ -266,10 +273,11 @@ fn get_route(index: usize) -> String {
 fn get_screen_index(screen: &str) -> usize {
     match screen {
         "/info" => 1,
-        "/buy" => 2,
-        "/stake" => 3,
-        "/roadmap" => 4,
-        "/community" => 5,
+        "/use-cases" => 2,
+        "/buy" => 3,
+        "/stake" => 4,
+        "/roadmap" => 5,
+        "/community" => 6,
         &_ => 0,
     }
 }
