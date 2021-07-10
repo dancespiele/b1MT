@@ -45,7 +45,7 @@ impl Component for RoadMap {
 
     fn view(&self) -> Html {
         html! {
-            <Container direction=Direction::Row wrap=Wrap::Wrap justify_content=JustifyContent::Center(Mode::NoMode)>
+            <Container direction=Direction::Row wrap=Wrap::Wrap justify_content=JustifyContent::Center(Mode::NoMode) id="roadmap">
                 <Item layouts=vec![ItemLayout::ItXs(12)]>
                     <canvas id="canvas" width="500" height="500">
                     </canvas>

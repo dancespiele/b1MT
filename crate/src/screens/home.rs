@@ -33,7 +33,8 @@ impl Component for Home {
             <Container
                 direction=Direction::Row wrap=Wrap::Wrap
                 justify_content=JustifyContent::Center(Mode::NoMode)
-                align_items=AlignItems::Center(Mode::NoMode)>
+                align_items=AlignItems::Center(Mode::NoMode)
+                id="home">
                 <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItM(3))>
                     <img class="logo-main-page" src="./1MTlite2.png" />
                 </Item>

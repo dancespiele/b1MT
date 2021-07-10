@@ -3,7 +3,7 @@ use crate::lang::Translations;
 use crate::screens::{Buy, Community, Home, Info, RoadMap, Stake, UseCases};
 use yew::prelude::*;
 use yew::services::ConsoleService;
-use yew::utils::document;
+use yew::utils::{document, window};
 use yew_router::{
     agent::{RouteAgent, RouteRequest},
     prelude::*,
@@ -97,32 +97,35 @@ impl Component for App {
             Msg::ScrollMenu(wheel_event) => {
                 let len = self.navbar_items.len();
                 let index_opt = self.navbar_items.to_vec().into_iter().position(|ai| ai);
-                for (i, _) in self.navbar_items.clone().into_iter().enumerate() {
-                    self.navbar_items[i] = false;
-                }
 
-                if wheel_event.delta_y() < 0.00 {
+                if wheel_event.delta_y() < 0.00 && check_scroll_leave_div_screen_up() {
                     if let Some(index) = index_opt {
+                        for (i, _) in self.navbar_items.clone().into_iter().enumerate() {
+                            self.navbar_items[i] = false;
+                        }
                         if index == 0 {
                             self.navbar_items[0] = true;
                             self.link.send_message(Msg::ChangeNavbarItem(0))
                         } else {
                             self.navbar_items[index - 1] = true;
-                            self.link.send_message(Msg::ChangeNavbarItem(index - 1))
+                            self.link.send_message(Msg::ChangeNavbarItem(index - 1));
                         }
                     } else {
-                        ConsoleService::error("no image active")
+                        ConsoleService::error("no image active");
                     }
-                } else if let Some(index) = index_opt {
-                    if index == len - 1 {
-                        self.navbar_items[len - 1] = true;
-                        self.link.send_message(Msg::ChangeNavbarItem(len - 1))
-                    } else {
-                        self.navbar_items[index + 1] = true;
-                        self.link.send_message(Msg::ChangeNavbarItem(index + 1))
+                } else if check_scroll_leave_div_screen_down() {
+                    if let Some(index) = index_opt {
+                        for (i, _) in self.navbar_items.clone().into_iter().enumerate() {
+                            self.navbar_items[i] = false;
+                        }
+                        if index == len - 1 {
+                            self.navbar_items[len - 1] = true;
+                            self.link.send_message(Msg::ChangeNavbarItem(len - 1))
+                        } else {
+                            self.navbar_items[index + 1] = true;
+                            self.link.send_message(Msg::ChangeNavbarItem(index + 1));
+                        }
                     }
-                } else {
-                    ConsoleService::error("no image active")
                 }
             }
             Msg::UpdateRoute(route) => {
@@ -165,9 +168,11 @@ impl Component for App {
                     <NavbarContainer>
                         {get_navbar(self.navbar_items.to_vec(), self.lang.clone(), self.link.clone())}
                     </NavbarContainer>
+                    <NavbarContainer justify_content=JustifyContent::FlexEnd(Mode::NoMode)>
+                        <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.png"/><span>{"1MT ETH"}</span></a>
+                    </NavbarContainer>
                 </Navbar>
-
-                <Carousel class_name="carousel" onwheel_signal= self.link.callback(Msg::ScrollMenu)>
+                <Carousel class_name="carousel" id="screen" onwheel_signal= self.link.callback(Msg::ScrollMenu)>
 
                     <Container direction=Direction::Row wrap=Wrap::Wrap class_name="screen" justify_content=JustifyContent::FlexStart(Mode::NoMode)>
                         <Item layouts=vec!(ItemLayout::ItXs(11)) align_self=AlignSelf::Center class_name="content">
@@ -292,4 +297,18 @@ fn get_dots(items: Vec<bool>, link: ComponentLink<App>) -> Html {
     }
 
     dot.into_iter().collect::<Html>()
+}
+
+fn check_scroll_leave_div_screen_up() -> bool {
+    let window_scroll_y = window().scroll_y().unwrap();
+
+    window_scroll_y == 0.0
+}
+
+fn check_scroll_leave_div_screen_down() -> bool {
+    let body_scroll_height = document().body().unwrap().scroll_height();
+    let window_inner_height = window().inner_height().unwrap();
+    let window_page_y_offset = window().page_y_offset().unwrap();
+
+    body_scroll_height as f64 - window_page_y_offset - window_inner_height.as_f64().unwrap() <= 1.0
 }

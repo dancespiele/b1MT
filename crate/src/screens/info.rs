@@ -37,7 +37,8 @@ impl Component for Info {
             <Container
                 direction=Direction::Row wrap=Wrap::Wrap
                 justify_content=JustifyContent::Center(Mode::NoMode)
-                align_items=AlignItems::Center(Mode::NoMode)>
+                align_items=AlignItems::Center(Mode::NoMode)
+                id="info">
                 {get_cards(self.lang.clone())}
             </Container>
         }

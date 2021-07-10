@@ -31,7 +31,8 @@ impl Component for Community {
             <Container
                 direction=Direction::Row wrap=Wrap::Wrap
                 justify_content=JustifyContent::Center(Mode::NoMode)
-                align_items=AlignItems::Center(Mode::NoMode)>
+                align_items=AlignItems::Center(Mode::NoMode)
+                id="community">
                 {get_cards()}
             </Container>
         }

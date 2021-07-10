@@ -31,7 +31,8 @@ impl Component for Buy {
             <Container
                 direction=Direction::Row wrap=Wrap::Wrap
                 justify_content=JustifyContent::Center(Mode::NoMode)
-                align_items=AlignItems::Center(Mode::NoMode)>
+                align_items=AlignItems::Center(Mode::NoMode)
+                id="buy">
                 {get_cards()}
             </Container>
         }

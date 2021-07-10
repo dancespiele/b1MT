@@ -53,7 +53,8 @@ impl Component for UseCases {
             <Container
                 direction=Direction::Row wrap=Wrap::Wrap
                 justify_content=JustifyContent::Center(Mode::NoMode)
-                align_items=AlignItems::Center(Mode::NoMode)>
+                align_items=AlignItems::Center(Mode::NoMode)
+                id="use-cases">
                 {get_cards(self.lang.clone(), self.partner_description_ref.clone())}
             </Container>
         }
@@ -63,7 +64,7 @@ impl Component for UseCases {
 fn get_cards(lang: Translations, partner_description_ref: NodeRef) -> Html {
     let cards_title = vec!["1MT Vegas Casino", &lang.partner_with_1mt];
 
-    let card_src = vec!["/bscscan_logo.jpg", "/coingeko_logo.png"];
+    let card_src = vec!["/vc1mt.png", "/1MTlite2.png"];
 
     cards_title
         .into_iter()
