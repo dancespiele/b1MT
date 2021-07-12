@@ -1,3 +1,5 @@
+use crate::config::Config;
+use crate::lang::Translations;
 use inflector::Inflector;
 use yew::prelude::*;
 use yew_styles::card::Card;
@@ -8,14 +10,18 @@ use yew_styles::layouts::{
 use yew_styles::styles::Style;
 use yew_styles::text::{Header, Text, TextType};
 
-pub struct Community;
+pub struct Community {
+    lang: Translations,
+}
 
 impl Component for Community {
     type Message = ();
     type Properties = ();
 
     fn create(_: Self::Properties, _: ComponentLink<Self>) -> Self {
-        Self
+        Self {
+            lang: Config::get_lang(),
+        }
     }
 
     fn update(&mut self, _: Self::Message) -> ShouldRender {
@@ -33,25 +39,27 @@ impl Component for Community {
                 justify_content=JustifyContent::Center(Mode::NoMode)
                 align_items=AlignItems::Center(Mode::NoMode)
                 id="community">
-                {get_cards()}
+                {get_cards(self.lang.clone())}
             </Container>
         }
     }
 }
 
-fn get_cards() -> Html {
-    let cards_title = vec!["Twitter", "Telegram", "Discord", "Medium"];
+fn get_cards(lang: Translations) -> Html {
+    let cards_title = vec!["Twitter", "Telegram", "Discord", "Medium", &lang.governance];
     let cards_url = vec![
         "https://twitter.com/1MillionBsc",
         "https://t.me/MillionToken",
         "https://discord.gg/CW9qnCRq",
         "https://1millionposts.medium.com",
+        "https://snapshot.org/#/b1mt.eth",
     ];
     let card_src = vec![
         "/twitter_logo.png",
         "/telegram_logo.png",
         "/discord_logo.png",
         "/medium_logo.jpeg",
+        "/snapshot.png",
     ];
 
     cards_title

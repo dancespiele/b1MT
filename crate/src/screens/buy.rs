@@ -40,12 +40,12 @@ impl Component for Buy {
 }
 
 fn get_cards() -> Html {
-    let cards_title = vec!["Pancakeswap", "Windswap"];
+    let cards_title = vec!["Pancakeswap", "Dex Guru"];
     let cards_url = vec![
         "https://v1exchange.pancakeswap.finance/#/swap?outputCurrency=0x8d67448d4f6231ABc070a42A8905084b79E09136",
-        "https://v1app.windswap.finance/#/swap?outputCurrency=0x8d67448d4f6231ABc070a42A8905084b79E09136",
+        "https://dex.guru/token/0x8d67448d4f6231abc070a42a8905084b79e09136-bsc"
     ];
-    let card_src = vec!["/pancakeswap_logo.png", "/windswap_logo.png"];
+    let card_src = vec!["/pancakeswap_logo.png", "/dex_guru.png"];
 
     cards_title
         .into_iter()

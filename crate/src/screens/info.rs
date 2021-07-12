@@ -50,13 +50,9 @@ fn get_cards(lang: Translations) -> Html {
     let cards_url = vec![
         "https://bscscan.com/token/0x8d67448d4f6231abc070a42a8905084b79e09136",
         "https://www.coingecko.com/en/coins/1million-token",
-        "https://app.windswap.finance/#/tokens/0x8d67448d4f6231abc070a42a8905084b79e09136",
+        "https://dex.guru/token/0x8d67448d4f6231abc070a42a8905084b79e09136-bsc",
     ];
-    let card_src = vec![
-        "/bscscan_logo.jpg",
-        "/coingeko_logo.png",
-        "/windswap_logo.png",
-    ];
+    let card_src = vec!["/bscscan_logo.jpg", "/coingeko_logo.png", "/dex_guru.png"];
 
     cards_title
         .into_iter()
