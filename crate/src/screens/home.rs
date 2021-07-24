@@ -41,6 +41,12 @@ impl Component for Home {
                 <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItM(3)) align_self=AlignSelf::Center>
                     <h3>{self.lang.description.clone()}</h3>
                 </Item>
+                <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItM(3))>
+                    <img class="logo-main-page" src="./P1MTMoon2b.png" />
+                </Item>
+                <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItM(3)) align_self=AlignSelf::Center>
+                    <h3>{self.lang.community_project.clone()}</h3>
+                </Item>
             </Container>
         }
     }

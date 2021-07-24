@@ -2,7 +2,6 @@ use crate::config::Config;
 use crate::lang::Translations;
 use crate::screens::{Buy, Community, Home, Info, RoadMap, Stake, UseCases};
 use yew::prelude::*;
-use yew::services::ConsoleService;
 use yew::utils::{document, window};
 use yew_router::{
     agent::{RouteAgent, RouteRequest},
@@ -25,6 +24,8 @@ use yew_styles::{
     styles::{Palette, Style},
     text::{Text, TextType},
 };
+
+use gloo::timers::callback::Timeout;
 
 pub struct App {
     navbar_items: Vec<bool>,
@@ -57,6 +58,8 @@ pub enum AppRouter {
 pub enum Msg {
     ChangeNavbarItem(usize),
     NavbarItemInit(usize),
+    ScreenUp(usize),
+    ScreenDown(usize, usize),
     ScrollMenu(WheelEvent),
     UpdateRoute(Route<()>),
 }
@@ -94,37 +97,47 @@ impl Component for App {
                     state: (),
                 }))
             }
+            Msg::ScreenUp(index) => {
+                for (i, _) in self.navbar_items.clone().into_iter().enumerate() {
+                    self.navbar_items[i] = false;
+                }
+                if index == 0 {
+                    self.navbar_items[0] = true;
+                    self.link.send_message(Msg::ChangeNavbarItem(0))
+                } else {
+                    self.navbar_items[index - 1] = true;
+                    self.link.send_message(Msg::ChangeNavbarItem(index - 1));
+                }
+            }
+            Msg::ScreenDown(index, len) => {
+                for (i, _) in self.navbar_items.clone().into_iter().enumerate() {
+                    self.navbar_items[i] = false;
+                }
+                if index == len - 1 {
+                    self.navbar_items[len - 1] = true;
+                    self.link.send_message(Msg::ChangeNavbarItem(len - 1))
+                } else {
+                    self.navbar_items[index + 1] = true;
+                    self.link.send_message(Msg::ChangeNavbarItem(index + 1));
+                }
+            }
             Msg::ScrollMenu(wheel_event) => {
                 let len = self.navbar_items.len();
                 let index_opt = self.navbar_items.to_vec().into_iter().position(|ai| ai);
 
-                if wheel_event.delta_y() < 0.00 && check_scroll_leave_div_screen_up() {
-                    if let Some(index) = index_opt {
-                        for (i, _) in self.navbar_items.clone().into_iter().enumerate() {
-                            self.navbar_items[i] = false;
-                        }
-                        if index == 0 {
-                            self.navbar_items[0] = true;
-                            self.link.send_message(Msg::ChangeNavbarItem(0))
-                        } else {
-                            self.navbar_items[index - 1] = true;
-                            self.link.send_message(Msg::ChangeNavbarItem(index - 1));
-                        }
-                    } else {
-                        ConsoleService::error("no image active");
-                    }
-                } else if check_scroll_leave_div_screen_down() {
-                    if let Some(index) = index_opt {
-                        for (i, _) in self.navbar_items.clone().into_iter().enumerate() {
-                            self.navbar_items[i] = false;
-                        }
-                        if index == len - 1 {
-                            self.navbar_items[len - 1] = true;
-                            self.link.send_message(Msg::ChangeNavbarItem(len - 1))
-                        } else {
-                            self.navbar_items[index + 1] = true;
-                            self.link.send_message(Msg::ChangeNavbarItem(index + 1));
-                        }
+                if let Some(index) = index_opt {
+                    if wheel_event.delta_y() < 0.00 && check_scroll_leave_div_screen_up() {
+                        let callback_screen_up = self.link.clone();
+                        Timeout::new(500, move || {
+                            callback_screen_up.send_message(Msg::ScreenUp(index))
+                        })
+                        .forget();
+                    } else if check_scroll_leave_div_screen_down() {
+                        let callback_screen_down = self.link.clone();
+                        Timeout::new(500, move || {
+                            callback_screen_down.send_message(Msg::ScreenDown(index, len))
+                        })
+                        .forget();
                     }
                 }
             }

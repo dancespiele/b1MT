@@ -47,7 +47,7 @@ impl Component for RoadMap {
         html! {
             <Container direction=Direction::Row wrap=Wrap::Wrap justify_content=JustifyContent::Center(Mode::NoMode) id="roadmap">
                 <Item layouts=vec![ItemLayout::ItXs(12)]>
-                    <canvas id="canvas" width="500" height="500">
+                    <canvas id="canvas" width="800" height="500">
                     </canvas>
                 </Item>
             </Container>
@@ -94,6 +94,10 @@ fn get_text(lang: Translations) -> Vec<RoadMapText> {
             done: false,
         },
         RoadMapText {
+            text: lang.partner_app,
+            done: false,
+        },
+        RoadMapText {
             text: lang.automata_token,
             done: false,
         },
@@ -111,13 +115,13 @@ fn get_text(lang: Translations) -> Vec<RoadMapText> {
 fn draw_horizontal_line(road_map_text: Vec<RoadMapText>) {
     let context = get_context_2d();
 
-    let x = 220.0;
+    let x = 280.0;
     let y = 0.0;
 
     context.begin_path();
 
     context.move_to(x, y);
-    context.line_to(x, 600.0);
+    context.line_to(x, 500.0);
     context.set_font("14px serif");
 
     road_map_text.into_iter().enumerate().for_each(|(i, t)| {
@@ -137,10 +141,10 @@ fn draw_horizontal_line(road_map_text: Vec<RoadMapText>) {
             context.line_to(xh, yh);
             context.fill_text(&t.text, xh, yh - 10.0).unwrap();
         } else {
-            let xh = 400.0;
+            let xh = 600.0;
             context.move_to(x, yh);
             context.line_to(xh, yh);
-            context.fill_text(&t.text, xh - 170.0, yh - 10.0).unwrap();
+            context.fill_text(&t.text, xh - 300.0, yh - 10.0).unwrap();
         }
 
         context.set_stroke_style(&text_color);

@@ -70,7 +70,7 @@ fn get_cards(lang: Translations, partner_description_ref: NodeRef) -> Html {
         .into_iter()
         .enumerate()
         .map(|(i, c)| {
-            let cards_title = c.clone();
+            let cards_title = c;
             html! {
                 <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(6), ItemLayout::ItL(4)]>
                     <Card

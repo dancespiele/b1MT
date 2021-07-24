@@ -5,6 +5,7 @@ extern crate cfg_if;
 #[macro_use]
 extern crate serde;
 
+extern crate gloo;
 extern crate inflector;
 extern crate js_sys;
 extern crate wasm_bindgen;

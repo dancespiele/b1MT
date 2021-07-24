@@ -28,5 +28,6 @@ yew = { version="0.18", features = ["toml", "yaml", "msgpack", "cbor", "web_sys"
 web-sys = { version = "0.3", features = ["Navigator", "FormData", "HtmlCanvasElement", "CanvasRenderingContext2d", "Location", "History"]}
 yew_styles = { version="0.9.4", features = ["full"]}
 yew-router = { version='0.15', features = ["web_sys"] }
+gloo = "0.2.1"
 js-sys = "0.3"
 Inflector = "0.11"

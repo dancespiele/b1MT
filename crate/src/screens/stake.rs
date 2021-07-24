@@ -48,7 +48,7 @@ fn get_cards() -> Html {
         .into_iter()
         .enumerate()
         .map(|(i, c)| {
-            let cards_title = c.clone();
+            let cards_title = c;
             html! {
                 <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(6)]>
                     <a href=cards_url[i] target="_blank">
