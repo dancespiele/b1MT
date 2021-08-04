@@ -3,6 +3,9 @@ use crate::lang::Translations;
 use crate::screens::{Buy, Community, Home, Info, RoadMap, Stake, UseCases};
 use yew::prelude::*;
 use yew::utils::{document, window};
+use yew_assets::business_assets::{BusinessAssets, BusinessIcon};
+use yew_assets::communication_assets::{CommunicationAssets, CommunicationIcon};
+use yew_assets::ux_assets::{UxAssets, UxIcon};
 use yew_router::{
     agent::{RouteAgent, RouteRequest},
     prelude::*,
@@ -16,13 +19,9 @@ use yew_styles::{
         container::{AlignContent, AlignItems, Container, Direction, JustifyContent, Mode, Wrap},
         item::{AlignSelf, Item, ItemLayout},
     },
-    navbar::{
-        navbar_component::{Fixed, Navbar},
-        navbar_container::NavbarContainer,
-        navbar_item::NavbarItem,
-    },
-    styles::{Palette, Style},
+    styles::{Palette, Position, Style},
     text::{Text, TextType},
+    tooltip::Tooltip,
 };
 
 use gloo::timers::callback::Timeout;
@@ -172,23 +171,33 @@ impl Component for App {
     fn view(&self) -> Html {
         html! {
             <div class="root">
-                <Navbar
-                    navbar_palette=Palette::Clean
-                    navbar_style=Style::Outline
-                    fixed=Fixed::Top
-                    branch=html!{<img src="./1MTlite2.png"/>}
-                >
-                    <NavbarContainer>
-                        {get_navbar(self.navbar_items.to_vec(), self.lang.clone(), self.link.clone())}
-                    </NavbarContainer>
-                    <NavbarContainer justify_content=JustifyContent::FlexEnd(Mode::NoMode)>
-                        <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.png"/><span>{"1MT ETH"}</span></a>
-                    </NavbarContainer>
-                </Navbar>
+                // <Navbar
+                //     navbar_palette=Palette::Clean
+                //     navbar_style=Style::Outline
+                //     fixed=Fixed::Top
+                //     branch=html!{<img src="./1MTlite2.png"/>}
+                // >
+                //     <NavbarContainer>
+                //         {get_navbar(self.navbar_items.to_vec(), self.lang.clone(), self.link.clone())}
+                //     </NavbarContainer>
+                //     <NavbarContainer justify_content=JustifyContent::FlexEnd(Mode::NoMode)>
+                //         <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.png"/><span>{"1MT ETH"}</span></a>
+                //     </NavbarContainer>
+                // </Navbar>
                 <Carousel class_name="carousel" id="screen" onwheel_signal= self.link.callback(Msg::ScrollMenu)>
 
                     <Container direction=Direction::Row wrap=Wrap::Wrap class_name="screen" justify_content=JustifyContent::FlexStart(Mode::NoMode)>
-                        <Item layouts=vec!(ItemLayout::ItXs(11)) align_self=AlignSelf::Center class_name="content">
+                        <Item layouts=vec!(ItemLayout::ItXs(1)) align_self=AlignSelf::Center class_name="content">
+                            <Container
+                                direction=Direction::Column wrap=Wrap::Wrap
+                                justify_content=JustifyContent::FlexStart(Mode::NoMode)
+                                align_items=AlignItems::FlexStart(Mode::NoMode)
+                                align_content=AlignContent::FlexStart(Mode::NoMode)
+                                class_name="dots">
+                                {get_dots(self.navbar_items.to_vec(), self.link.clone(), self.lang.clone())}
+                            </Container>
+                        </Item>
+                        <Item layouts=vec!(ItemLayout::ItXs(10)) align_self=AlignSelf::Center class_name="content">
                         <Router<AppRouter, ()>
                             render = Router::render(|switch: AppRouter| {
                                 match switch {
@@ -216,17 +225,6 @@ impl Component for App {
                             })
                         />
                         </Item>
-
-                        <Item layouts=vec!(ItemLayout::ItXs(1)) align_self=AlignSelf::Center class_name="content">
-                            <Container
-                                direction=Direction::Column wrap=Wrap::Wrap
-                                justify_content=JustifyContent::FlexEnd(Mode::NoMode)
-                                align_items=AlignItems::FlexEnd(Mode::NoMode)
-                                align_content=AlignContent::FlexEnd(Mode::NoMode)
-                                class_name="dots">
-                                {get_dots(self.navbar_items.to_vec(), self.link.clone())}
-                            </Container>
-                        </Item>
                     </Container>
                 </Carousel>
             </div>
@@ -234,32 +232,32 @@ impl Component for App {
     }
 }
 
-fn get_navbar(items: Vec<bool>, lang: Translations, link: ComponentLink<App>) -> Html {
-    let menus = vec![
-        lang.home,
-        lang.tokenomics,
-        lang.use_cases,
-        lang.buy,
-        lang.stake,
-        lang.road_map,
-        lang.community,
-    ];
-
-    let mut navbar_items = vec![];
-
-    for (i, _) in items.clone().into_iter().enumerate() {
-        navbar_items.push(html! {
-            <NavbarItem
-                active = items[i]
-                onclick_signal = link.callback(move |_| Msg::ChangeNavbarItem(i))
-                >
-                {get_text(menus[i].as_str())}
-            </NavbarItem>
-        })
-    }
-
-    navbar_items.into_iter().collect::<Html>()
-}
+// fn get_navbar(items: Vec<bool>, lang: Translations, link: ComponentLink<App>) -> Html {
+//     let menus = vec![
+//         lang.home,
+//         lang.tokenomics,
+//         lang.use_cases,
+//         lang.buy,
+//         lang.stake,
+//         lang.road_map,
+//         lang.community,
+//     ];
+//
+//     let mut navbar_items = vec![];
+//
+//     for (i, _) in items.clone().into_iter().enumerate() {
+//         navbar_items.push(html! {
+//             <NavbarItem
+//                 active = items[i]
+//                 onclick_signal = link.callback(move |_| Msg::ChangeNavbarItem(i))
+//                 >
+//                 {get_text(menus[i].as_str())}
+//             </NavbarItem>
+//         })
+//     }
+//
+//     navbar_items.into_iter().collect::<Html>()
+// }
 
 fn get_text(text: &str) -> Html {
     html! {
@@ -288,6 +286,61 @@ fn get_route(index: usize) -> String {
     }
 }
 
+fn get_dot(index: usize, lang: Translations) -> Html {
+    let menus = vec![
+        lang.home,
+        lang.tokenomics,
+        lang.use_cases,
+        lang.buy,
+        lang.stake,
+        lang.road_map,
+        lang.community,
+    ];
+
+    match index {
+        0 => html! {
+            <Tooltip content=get_text(&menus[0]) tooltip_position=Position::Right>
+                <UxAssets icon=UxIcon::Home size=("40".to_string(), "40".to_string())/>
+            </Tooltip>
+        },
+        1 => html! {
+                <Tooltip content=get_text(&menus[1]) tooltip_position=Position::Right>
+                    <BusinessAssets icon=BusinessIcon::TrendingUp size=("40".to_string(), "40".to_string())/>
+                </Tooltip>
+        },
+        2 => html! {
+            <Tooltip content=get_text(&menus[2]) tooltip_position=Position::Right>
+                <UxAssets icon=UxIcon::Tool size=("40".to_string(), "40".to_string())/>
+            </Tooltip>
+        },
+        3 => html! {
+            <Tooltip content=get_text(&menus[3]) tooltip_position=Position::Right>
+                <BusinessAssets icon=BusinessIcon::DollarSign size=("40".to_string(), "40".to_string())/>
+            </Tooltip>
+        },
+        4 => html! {
+            <Tooltip content=get_text(&menus[4]) tooltip_position=Position::Right>
+                <UxAssets icon=UxIcon::Lock size=("40".to_string(), "40".to_string())/>
+            </Tooltip>
+        },
+        5 => html! {
+            <Tooltip content=get_text(&menus[5]) tooltip_position=Position::Right>
+                <BusinessAssets icon=BusinessIcon::Target size=("40".to_string(), "40".to_string())/>
+            </Tooltip>
+        },
+        6 => html! {
+            <Tooltip content=get_text(&menus[6]) tooltip_position=Position::Right>
+                <CommunicationAssets icon=CommunicationIcon::Smile size=("40".to_string(), "40".to_string())/>
+            </Tooltip>
+        },
+        _ => html! {
+            <Tooltip content=get_text(&menus[0]) tooltip_position=Position::Right>
+                <UxAssets icon=UxIcon::Home size=("40".to_string(), "40".to_string())/>
+            </Tooltip>
+        },
+    }
+}
+
 fn get_screen_index(screen: &str) -> usize {
     match screen {
         "/info" => 1,
@@ -300,12 +353,14 @@ fn get_screen_index(screen: &str) -> usize {
     }
 }
 
-fn get_dots(items: Vec<bool>, link: ComponentLink<App>) -> Html {
+fn get_dots(items: Vec<bool>, link: ComponentLink<App>, lang: Translations) -> Html {
     let mut dot = vec![];
 
     for (i, _) in items.clone().into_iter().enumerate() {
         dot.push(html! {
-            <CarouselDot active=items[i] onclick_signal = link.callback(move |_| Msg::ChangeNavbarItem(i))/>
+            <CarouselDot active=items[i] onclick_signal = link.callback(move |_| Msg::ChangeNavbarItem(i))>
+                {get_dot(i, lang.clone())}
+            </CarouselDot>
         })
     }
 

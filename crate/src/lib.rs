@@ -11,6 +11,7 @@ extern crate js_sys;
 extern crate wasm_bindgen;
 extern crate web_sys;
 extern crate yew;
+extern crate yew_assets;
 extern crate yew_router;
 extern crate yew_styles;
 
