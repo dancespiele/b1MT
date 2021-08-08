@@ -21,6 +21,7 @@ mod app;
 mod config;
 mod lang;
 mod screens;
+mod utils;
 use app::App;
 
 cfg_if! {

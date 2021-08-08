@@ -1,3 +1,10 @@
+@mixin set-scroll-style($animation, $direction)
+  animation-name: $animation
+  animation-duration: 2s
+  animation-direction: $direction
+  animation-iteration-count: 1
+  animation-fill-mode: forwards
+
 .carousel
     height: 100%
 
@@ -12,6 +19,9 @@ body
     margin: 0
     height: 100%
 
+.navbar
+  display: none
+
 .content
   width: 100%
   padding-top: 100px
@@ -21,6 +31,7 @@ body
 
 .dots
   height: 100%
+  display: flex
 
   .carousel-dot
     padding-right: 10px
@@ -47,3 +58,37 @@ body
 
   span
     vertical-align: middle
+
+.carousel-dot
+  margin-bottom: 60%
+  margin-left: 20px
+
+@media (max-width: 991px)
+  .dots
+    display: none
+
+#home, #buy, #info, #roadmap, #use-cases, #stake
+  &.scroll-down
+    @include set-scroll-style(scroll-down-animation, normal)
+
+#community, #buy, #info, #roadmap, #use-cases, #stake
+  &.scroll-up
+    @include set-scroll-style(scroll-up-animation, normal)
+
+@keyframes scroll-up-animation
+  0%
+    position: relative
+    top: 0
+    opacity: 1
+  100%
+    top: 2000px
+    opacity: 0
+
+@keyframes scroll-down-animation
+  0%
+    position: relative
+    top: 0
+    opacity: 1
+  100%
+    top: -2000px
+    opacity: 0

@@ -1,6 +1,9 @@
 use crate::config::Config;
 use crate::lang::Translations;
 use crate::screens::{Buy, Community, Home, Info, RoadMap, Stake, UseCases};
+use crate::utils::{set_scroll_style, set_scrollbar_state, ScrollStyle, ScrollbarState};
+use wasm_bindgen::JsCast;
+use web_sys::Element;
 use yew::prelude::*;
 use yew::utils::{document, window};
 use yew_assets::business_assets::{BusinessAssets, BusinessIcon};
@@ -19,6 +22,11 @@ use yew_styles::{
         container::{AlignContent, AlignItems, Container, Direction, JustifyContent, Mode, Wrap},
         item::{AlignSelf, Item, ItemLayout},
     },
+    navbar::{
+        navbar_component::{Fixed, Navbar},
+        navbar_container::NavbarContainer,
+        navbar_item::NavbarItem,
+    },
     styles::{Palette, Position, Style},
     text::{Text, TextType},
     tooltip::Tooltip,
@@ -29,6 +37,7 @@ use gloo::timers::callback::Timeout;
 pub struct App {
     navbar_items: Vec<bool>,
     link: ComponentLink<Self>,
+    close_navbar_mobile: bool,
     lang: Translations,
     route_agent: Box<dyn Bridge<RouteAgent<()>>>,
     route: Route<()>,
@@ -57,6 +66,7 @@ pub enum AppRouter {
 pub enum Msg {
     ChangeNavbarItem(usize),
     NavbarItemInit(usize),
+    CloseNavarMobile(MouseEvent),
     ScreenUp(usize),
     ScreenDown(usize, usize),
     ScrollMenu(WheelEvent),
@@ -75,6 +85,7 @@ impl Component for App {
         App {
             navbar_items: vec![true, false, false, false, false, false, false],
             link,
+            close_navbar_mobile: false,
             lang: Config::get_lang(),
             route,
             route_agent,
@@ -107,6 +118,8 @@ impl Component for App {
                     self.navbar_items[index - 1] = true;
                     self.link.send_message(Msg::ChangeNavbarItem(index - 1));
                 }
+
+                set_scrollbar_state(ScrollbarState::Auto);
             }
             Msg::ScreenDown(index, len) => {
                 for (i, _) in self.navbar_items.clone().into_iter().enumerate() {
@@ -125,14 +138,22 @@ impl Component for App {
                 let index_opt = self.navbar_items.to_vec().into_iter().position(|ai| ai);
 
                 if let Some(index) = index_opt {
+                    let mut screen_id = get_route(index).replace("/", "");
+
+                    if screen_id.is_empty() {
+                        screen_id = String::from("home");
+                    }
                     if wheel_event.delta_y() < 0.00 && check_scroll_leave_div_screen_up() {
+                        set_scrollbar_state(ScrollbarState::Hidden);
                         let callback_screen_up = self.link.clone();
+                        set_scroll_style(ScrollStyle::ScrollUp, &screen_id);
                         Timeout::new(500, move || {
                             callback_screen_up.send_message(Msg::ScreenUp(index))
                         })
                         .forget();
                     } else if check_scroll_leave_div_screen_down() {
                         let callback_screen_down = self.link.clone();
+                        set_scroll_style(ScrollStyle::ScrollDown, &screen_id);
                         Timeout::new(500, move || {
                             callback_screen_down.send_message(Msg::ScreenDown(index, len))
                         })
@@ -147,6 +168,34 @@ impl Component for App {
                 }
                 self.navbar_items[index] = true;
                 self.route = route;
+            }
+            Msg::CloseNavarMobile(mouse_event) => {
+                let target_class = mouse_event
+                    .target()
+                    .unwrap()
+                    .dyn_into::<Element>()
+                    .unwrap()
+                    .class_list();
+
+                let target_option = mouse_event.target();
+
+                if let Some(target) = target_option {
+                    let target_element_option = target.dyn_into::<Element>();
+
+                    if let Ok(target_element) = target_element_option {
+                        let parent_element_option = target_element.parent_element();
+
+                        if let Some(parent_element) = parent_element_option {
+                            let tag_name = parent_element.tag_name();
+
+                            if !target_class.value().contains("navbar-menu") && tag_name != "svg" {
+                                self.close_navbar_mobile = true;
+                            } else {
+                                self.close_navbar_mobile = false
+                            }
+                        }
+                    }
+                }
             }
         }
         true
@@ -170,22 +219,22 @@ impl Component for App {
 
     fn view(&self) -> Html {
         html! {
-            <div class="root">
-                // <Navbar
-                //     navbar_palette=Palette::Clean
-                //     navbar_style=Style::Outline
-                //     fixed=Fixed::Top
-                //     branch=html!{<img src="./1MTlite2.png"/>}
-                // >
-                //     <NavbarContainer>
-                //         {get_navbar(self.navbar_items.to_vec(), self.lang.clone(), self.link.clone())}
-                //     </NavbarContainer>
-                //     <NavbarContainer justify_content=JustifyContent::FlexEnd(Mode::NoMode)>
-                //         <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.png"/><span>{"1MT ETH"}</span></a>
-                //     </NavbarContainer>
-                // </Navbar>
+            <div class="root" onclick=self.link.callback(Msg::CloseNavarMobile)>
+                <Navbar
+                    navbar_palette=Palette::Clean
+                    navbar_style=Style::Outline
+                    fixed=Fixed::Top
+                    branch=html!{<img src="./1MTlite2.png"/>}
+                    hide_navbar_items_mobile = self.close_navbar_mobile
+                >
+                    <NavbarContainer>
+                        {get_navbar(self.navbar_items.to_vec(), self.lang.clone(), self.link.clone())}
+                    </NavbarContainer>
+                    <NavbarContainer justify_content=JustifyContent::FlexEnd(Mode::NoMode)>
+                        <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.png"/><span>{"1MT ETH"}</span></a>
+                    </NavbarContainer>
+                </Navbar>
                 <Carousel class_name="carousel" id="screen" onwheel_signal= self.link.callback(Msg::ScrollMenu)>
-
                     <Container direction=Direction::Row wrap=Wrap::Wrap class_name="screen" justify_content=JustifyContent::FlexStart(Mode::NoMode)>
                         <Item layouts=vec!(ItemLayout::ItXs(1)) align_self=AlignSelf::Center class_name="content">
                             <Container
@@ -198,32 +247,32 @@ impl Component for App {
                             </Container>
                         </Item>
                         <Item layouts=vec!(ItemLayout::ItXs(10)) align_self=AlignSelf::Center class_name="content">
-                        <Router<AppRouter, ()>
-                            render = Router::render(|switch: AppRouter| {
-                                match switch {
-                                    AppRouter::HomePath => html! {
-                                        <Home/>
-                                    },
-                                    AppRouter::InfoPath => html! {
-                                        <Info/>
-                                    },
-                                    AppRouter::UseCasesPath => html! {
-                                        <UseCases/>
-                                    },
-                                    AppRouter::BuyPath => html! {
-                                        <Buy/>
-                                    },
-                                    AppRouter::StakePath => html!{<Stake/>},
-                                    AppRouter::RoadMapPath => html!{<RoadMap/>},
-                                    AppRouter::CommunityPath => html!{<Community/>},
-                                    AppRouter::PageNotFound(Permissive(None)) => html!{<h1>{"Page not found"}</h1>},
-                                    AppRouter::PageNotFound(Permissive(Some(missed_route))) => html!{<h1>{format!("Page '{}' not found", missed_route)}</h1>}
-                                }
-                            })
-                            redirect = Router::redirect(|route: Route<()>| {
-                                AppRouter::PageNotFound(Permissive(Some(route.route)))
-                            })
-                        />
+                            <Router<AppRouter, ()>
+                                render = Router::render(|switch: AppRouter| {
+                                    match switch {
+                                        AppRouter::HomePath => html! {
+                                            <Home/>
+                                        },
+                                        AppRouter::InfoPath => html! {
+                                            <Info/>
+                                        },
+                                        AppRouter::UseCasesPath => html! {
+                                            <UseCases/>
+                                        },
+                                        AppRouter::BuyPath => html! {
+                                            <Buy/>
+                                        },
+                                        AppRouter::StakePath => html!{<Stake/>},
+                                        AppRouter::RoadMapPath => html!{<RoadMap/>},
+                                        AppRouter::CommunityPath => html!{<Community/>},
+                                        AppRouter::PageNotFound(Permissive(None)) => html!{<h1>{"Page not found"}</h1>},
+                                        AppRouter::PageNotFound(Permissive(Some(missed_route))) => html!{<h1>{format!("Page '{}' not found", missed_route)}</h1>}
+                                    }
+                                })
+                                redirect = Router::redirect(|route: Route<()>| {
+                                    AppRouter::PageNotFound(Permissive(Some(route.route)))
+                                })
+                            />
                         </Item>
                     </Container>
                 </Carousel>
@@ -232,32 +281,32 @@ impl Component for App {
     }
 }
 
-// fn get_navbar(items: Vec<bool>, lang: Translations, link: ComponentLink<App>) -> Html {
-//     let menus = vec![
-//         lang.home,
-//         lang.tokenomics,
-//         lang.use_cases,
-//         lang.buy,
-//         lang.stake,
-//         lang.road_map,
-//         lang.community,
-//     ];
-//
-//     let mut navbar_items = vec![];
-//
-//     for (i, _) in items.clone().into_iter().enumerate() {
-//         navbar_items.push(html! {
-//             <NavbarItem
-//                 active = items[i]
-//                 onclick_signal = link.callback(move |_| Msg::ChangeNavbarItem(i))
-//                 >
-//                 {get_text(menus[i].as_str())}
-//             </NavbarItem>
-//         })
-//     }
-//
-//     navbar_items.into_iter().collect::<Html>()
-// }
+fn get_navbar(items: Vec<bool>, lang: Translations, link: ComponentLink<App>) -> Html {
+    let menus = vec![
+        lang.home,
+        lang.tokenomics,
+        lang.use_cases,
+        lang.buy,
+        lang.stake,
+        lang.road_map,
+        lang.community,
+    ];
+
+    let mut navbar_items = vec![];
+
+    for (i, _) in items.clone().into_iter().enumerate() {
+        navbar_items.push(html! {
+            <NavbarItem
+                active = items[i]
+                onclick_signal = link.callback(move |_| Msg::ChangeNavbarItem(i))
+                >
+                {get_text(menus[i].as_str())}
+            </NavbarItem>
+        })
+    }
+
+    navbar_items.into_iter().collect::<Html>()
+}
 
 fn get_text(text: &str) -> Html {
     html! {
