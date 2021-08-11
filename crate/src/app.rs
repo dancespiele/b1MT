@@ -5,6 +5,7 @@ use crate::utils::{set_scroll_style, set_scrollbar_state, ScrollStyle, Scrollbar
 use wasm_bindgen::JsCast;
 use web_sys::Element;
 use yew::prelude::*;
+use yew::services::ConsoleService;
 use yew::utils::{document, window};
 use yew_assets::business_assets::{BusinessAssets, BusinessIcon};
 use yew_assets::communication_assets::{CommunicationAssets, CommunicationIcon};
@@ -105,8 +106,9 @@ impl Component for App {
                 self.route_agent.send(RouteRequest::ChangeRoute(Route {
                     route: get_route(index),
                     state: (),
-                }))
+                }));
             }
+
             Msg::ScreenUp(index) => {
                 for (i, _) in self.navbar_items.clone().into_iter().enumerate() {
                     self.navbar_items[i] = false;
@@ -138,22 +140,18 @@ impl Component for App {
                 let index_opt = self.navbar_items.to_vec().into_iter().position(|ai| ai);
 
                 if let Some(index) = index_opt {
-                    let mut screen_id = get_route(index).replace("/", "");
-
-                    if screen_id.is_empty() {
-                        screen_id = String::from("home");
-                    }
+                    let screen_id = get_screen_id(index);
                     if wheel_event.delta_y() < 0.00 && check_scroll_leave_div_screen_up() {
                         set_scrollbar_state(ScrollbarState::Hidden);
                         let callback_screen_up = self.link.clone();
-                        set_scroll_style(ScrollStyle::ScrollUp, &screen_id);
+                        set_scroll_style(ScrollStyle::ScrollUp, &screen_id, "scroll");
                         Timeout::new(500, move || {
                             callback_screen_up.send_message(Msg::ScreenUp(index))
                         })
                         .forget();
                     } else if check_scroll_leave_div_screen_down() {
                         let callback_screen_down = self.link.clone();
-                        set_scroll_style(ScrollStyle::ScrollDown, &screen_id);
+                        set_scroll_style(ScrollStyle::ScrollDown, &screen_id, "scroll");
                         Timeout::new(500, move || {
                             callback_screen_down.send_message(Msg::ScreenDown(index, len))
                         })
@@ -224,7 +222,7 @@ impl Component for App {
                     navbar_palette=Palette::Clean
                     navbar_style=Style::Outline
                     fixed=Fixed::Top
-                    branch=html!{<img src="./1MTlite2.png"/>}
+                    branch=html!{<img src="/1MTlite2.png"/>}
                     hide_navbar_items_mobile = self.close_navbar_mobile
                 >
                     <NavbarContainer>
@@ -234,6 +232,12 @@ impl Component for App {
                         <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.png"/><span>{"1MT ETH"}</span></a>
                     </NavbarContainer>
                 </Navbar>
+                <div class="logo-b1mt">
+                    <img src="/1MTlite2.png"/>
+                </div>
+                <div class="logo-1mt">
+                    <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.png"/><span>{"1MT ETH"}</span></a>
+                </div>
                 <Carousel class_name="carousel" id="screen" onwheel_signal= self.link.callback(Msg::ScrollMenu)>
                     <Container direction=Direction::Row wrap=Wrap::Wrap class_name="screen" justify_content=JustifyContent::FlexStart(Mode::NoMode)>
                         <Item layouts=vec!(ItemLayout::ItXs(1)) align_self=AlignSelf::Center class_name="content">
@@ -428,4 +432,14 @@ fn check_scroll_leave_div_screen_down() -> bool {
     let window_page_y_offset = window().page_y_offset().unwrap();
 
     body_scroll_height as f64 - window_page_y_offset - window_inner_height.as_f64().unwrap() <= 1.0
+}
+
+fn get_screen_id(index: usize) -> String {
+    let mut screen_id = get_route(index).replace("/", "");
+
+    if screen_id.is_empty() {
+        screen_id = String::from("home");
+    }
+
+    screen_id
 }

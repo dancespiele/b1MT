@@ -12,7 +12,7 @@ pub enum ScrollbarState {
     Hidden,
 }
 
-pub fn set_scroll_style(scroll_style: ScrollStyle, id: &str) {
+pub fn set_scroll_style(scroll_style: ScrollStyle, id: &str, style: &str) {
     let screen_element = document()
         .get_element_by_id(id)
         .unwrap()
@@ -23,10 +23,10 @@ pub fn set_scroll_style(scroll_style: ScrollStyle, id: &str) {
 
     match scroll_style {
         ScrollStyle::ScrollUp => {
-            screen_element.set_class_name(&format!("{} scroll-up", screen_style));
+            screen_element.set_class_name(&format!("{} {}-up", screen_style, style));
         }
         ScrollStyle::ScrollDown => {
-            screen_element.set_class_name(&format!("{} scroll-down", screen_style));
+            screen_element.set_class_name(&format!("{} {}-down", screen_style, style));
         }
     };
 }

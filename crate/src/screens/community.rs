@@ -2,13 +2,12 @@ use crate::config::Config;
 use crate::lang::Translations;
 use inflector::Inflector;
 use yew::prelude::*;
-use yew_styles::card::Card;
 use yew_styles::layouts::{
     container::{AlignItems, Container, Direction, JustifyContent, Mode, Wrap},
     item::{Item, ItemLayout},
 };
-use yew_styles::styles::Style;
-use yew_styles::text::{Header, Text, TextType};
+use yew_styles::styles::Position;
+use yew_styles::tooltip::Tooltip;
 
 pub struct Community {
     lang: Translations,
@@ -46,15 +45,15 @@ impl Component for Community {
 }
 
 fn get_cards(lang: Translations) -> Html {
-    let cards_title = vec!["Twitter", "Telegram", "Discord", "Medium", &lang.governance];
-    let cards_url = vec![
+    let tooltip_titles = vec!["Twitter", "Telegram", "Discord", "Medium", &lang.governance];
+    let social_url = vec![
         "https://twitter.com/1MillionBsc",
         "https://t.me/MillionToken",
         "https://discord.gg/CW9qnCRq",
         "https://1millionposts.medium.com",
         "https://snapshot.org/#/b1mt.eth",
     ];
-    let card_src = vec![
+    let icon_src = vec![
         "/twitter_logo.png",
         "/telegram_logo.png",
         "/discord_logo.png",
@@ -62,30 +61,21 @@ fn get_cards(lang: Translations) -> Html {
         "/snapshot.png",
     ];
 
-    cards_title
+    tooltip_titles
         .into_iter()
         .enumerate()
         .map(|(i, c)| {
-            let cards_title = c;
+            let tooltip_title = c;
             html! {
-                <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(6), ItemLayout::ItL(4)]>
-                    <a href=cards_url[i] target="_blank">
-                        <Card
-                            class_name="content-card"
-                            card_style=Style::Outline
-                            header=Some(html!{
-                                <img class="content-image" src=card_src[i] alt=cards_title.to_title_case()/>
-                            })
-                            header_size=11
-                            body_size=1
-                            body=Some(html!{
-                                <Text
-                                    text_type=TextType::Title(Header::H3)
-                                    plain_text=c.to_title_case()
-                                />
-                            })
-                        />
-                    </a>
+                <Item class_name="social-icons" layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(6), ItemLayout::ItL(4)]>
+                    <Tooltip
+                        content=html!{<span>{tooltip_title}</span>}
+                        tooltip_position=Position::Below
+                    >
+                        <a href=social_url[i] target="_blank">
+                            <img class="content-image" src=icon_src[i] alt=tooltip_title.to_title_case()/>
+                        </a>
+                    </Tooltip>
                 </Item>
             }
         })

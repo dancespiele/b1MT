@@ -41,7 +41,10 @@ body
     height: auto
 
 .content-image
-  height: 200px
+  height: 100px
+
+.social-icons
+    margin-bottom: 200px
 
 .content-card
   margin: 20px 40px
@@ -61,11 +64,29 @@ body
 
 .carousel-dot
   margin-bottom: 60%
-  margin-left: 20px
+  margin-left: 38px
+
+.logo-b1mt
+  position: absolute
+  top: 15px
+  left: 10px
+
+  img
+    width: 100px
+
+.logo-1mt
+  position: absolute
+  top: 15px
+  right: 10px
+  z-index: 1
+
+  img
+    width: 45px
 
 @media (max-width: 991px)
-  .dots
+  .dots, .logo-1mt, .logo-b1mt
     display: none
+
 
 #home, #buy, #info, #roadmap, #use-cases, #stake
   &.scroll-down
