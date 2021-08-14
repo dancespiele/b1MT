@@ -49,7 +49,7 @@ fn get_cards(lang: Translations) -> Html {
     let social_url = vec![
         "https://twitter.com/1MillionBsc",
         "https://t.me/MillionToken",
-        "https://discord.gg/CW9qnCRq",
+        "https://discord.gg/2DavnqQg39",
         "https://1millionposts.medium.com",
         "https://snapshot.org/#/b1mt.eth",
     ];

@@ -60,9 +60,9 @@ fn get_cards(lang: Translations) -> Html {
         .map(|(i, c)| {
             let tooltip_title = c;
             let tokenomics_class = classes!(if i == info_url.len() - 1 {
-                "tokenomics-last-icon"
+                "content-last-icon"
             } else {
-                "tokenomics-icon"
+                "content-icon"
             });
 
             html! {

@@ -1,12 +1,11 @@
 use inflector::Inflector;
 use yew::prelude::*;
-use yew_styles::card::Card;
 use yew_styles::layouts::{
     container::{AlignItems, Container, Direction, JustifyContent, Mode, Wrap},
     item::{Item, ItemLayout},
 };
-use yew_styles::styles::Style;
-use yew_styles::text::{Header, Text, TextType};
+use yew_styles::styles::Position;
+use yew_styles::tooltip::Tooltip;
 
 pub struct Buy;
 
@@ -40,37 +39,36 @@ impl Component for Buy {
 }
 
 fn get_cards() -> Html {
-    let cards_title = vec!["Pancakeswap", "Dex Guru"];
-    let cards_url = vec![
+    let swaps_title = vec!["Pancakeswap", "Dex Guru"];
+    let swaps_url = vec![
         "https://v1exchange.pancakeswap.finance/#/swap?outputCurrency=0x8d67448d4f6231ABc070a42A8905084b79E09136",
         "https://dex.guru/token/0x8d67448d4f6231abc070a42a8905084b79e09136-bsc"
     ];
-    let card_src = vec!["/pancakeswap_logo.png", "/dex_guru.png"];
+    let icons_src = vec!["/pancakeswap_logo.png", "/dex_guru.png"];
 
-    cards_title
+    swaps_title
         .into_iter()
         .enumerate()
         .map(|(i, c)| {
-            let cards_title = c;
+            let swap_title = c;
+            let tokenomics_class = classes!(if i == swaps_url.len() - 1 {
+                "content-last-icon"
+            } else {
+                "content-icon"
+            });
+
             html! {
                 <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(6)]>
-                    <a href=cards_url[i] target="_blank">
-                        <Card
-                            class_name="content-card"
-                            card_style=Style::Outline
-                            header=Some(html!{
-                                <img class="content-image" src=card_src[i] alt=cards_title.to_title_case()/>
-                            })
-                            header_size=11
-                            body_size=1
-                            body=Some(html!{
-                                <Text
-                                    text_type=TextType::Title(Header::H3)
-                                    plain_text=c.to_title_case()
-                                />
-                            })
-                        />
-                    </a>
+                    <div class=tokenomics_class>
+                        <Tooltip
+                            content=html!{<span>{swap_title}</span>}
+                            tooltip_position=Position::Below
+                        >
+                            <a href=swaps_url[i] target="_blank">
+                                <img class="content-image" src=icons_src[i] alt=swap_title.to_title_case()/>
+                            </a>
+                        </Tooltip>
+                    </div>
                 </Item>
             }
         })

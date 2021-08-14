@@ -1,21 +1,29 @@
+use crate::config::Config;
+use crate::lang::Translations;
 use inflector::Inflector;
+use web_sys::HtmlElement;
 use yew::prelude::*;
-use yew_styles::card::Card;
 use yew_styles::layouts::{
     container::{AlignItems, Container, Direction, JustifyContent, Mode, Wrap},
     item::{Item, ItemLayout},
 };
-use yew_styles::styles::Style;
+use yew_styles::styles::Size;
 use yew_styles::text::{Header, Text, TextType};
 
-pub struct Stake;
+pub struct Stake {
+    lang: Translations,
+    kennel_description_ref: NodeRef,
+}
 
 impl Component for Stake {
     type Message = ();
     type Properties = ();
 
     fn create(_: Self::Properties, _: ComponentLink<Self>) -> Self {
-        Self
+        Self {
+            lang: Config::get_lang(),
+            kennel_description_ref: NodeRef::default(),
+        }
     }
 
     fn update(&mut self, _: Self::Message) -> ShouldRender {
@@ -26,6 +34,16 @@ impl Component for Stake {
         false
     }
 
+    fn rendered(&mut self, first_render: bool) {
+        if first_render {
+            let kennel_description_lang = self.lang.the_kennel_token_description.clone();
+
+            if let Some(description) = self.kennel_description_ref.cast::<HtmlElement>() {
+                description.set_inner_html(&kennel_description_lang);
+            }
+        }
+    }
+
     fn view(&self) -> Html {
         html! {
             <Container
@@ -33,41 +51,49 @@ impl Component for Stake {
                 justify_content=JustifyContent::Center(Mode::NoMode)
                 align_items=AlignItems::Center(Mode::NoMode)
                 id="stake">
-                {get_cards()}
+                {get_cards(vec![self.kennel_description_ref.clone()])}
             </Container>
         }
     }
 }
 
-fn get_cards() -> Html {
-    let cards_title = vec!["The Token Kennel"];
-    let cards_url = vec!["https://thetokenkennel.com/boarding/#/"];
-    let card_src = vec!["/token_kennel_logo.jpg"];
+fn get_cards(descriptions: Vec<NodeRef>) -> Html {
+    let stake_titles = vec!["The Token Kennel"];
+    let pools_url = vec!["https://thetokenkennel.com/boarding/#/"];
+    let icon_src = vec!["/token_kennel_logo.jpg"];
 
-    cards_title
+    stake_titles
         .into_iter()
         .enumerate()
         .map(|(i, c)| {
-            let cards_title = c;
+            let stake_title = c;
             html! {
                 <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(6)]>
-                    <a href=cards_url[i] target="_blank">
-                        <Card
-                            class_name="content-card"
-                            card_style=Style::Outline
-                            header=Some(html!{
-                                <img class="content-image" src=card_src[i] alt=cards_title.to_title_case()/>
-                            })
-                            header_size=11
-                            body_size=1
-                            body=Some(html!{
-                                <Text
-                                    text_type=TextType::Title(Header::H3)
-                                    plain_text=c.to_title_case()
-                                />
-                            })
-                        />
-                    </a>
+                    <Container
+                        direction=Direction::Row wrap=Wrap::Wrap
+                        justify_content=JustifyContent::Center(Mode::NoMode)
+                        align_items=AlignItems::Center(Mode::NoMode)>
+                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(3), ItemLayout::ItL(2)]>
+                            <a href=pools_url[i] target="_blank">
+                                <img class="kennel-image" src=icon_src[i] alt=stake_title.to_title_case()/>
+                            </a>
+                        </Item>
+                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(6), ItemLayout::ItL(6)]>
+                            <Text
+                                class_name="kennel-title"
+                                text_type=TextType::Title(Header::H3)
+                                plain_text=c.to_string()
+                            />
+                            <Text
+                                class_name="kennel-description"
+                                text_type=TextType::Plain
+                                text_size=Size::Medium
+                                html_text=html!{
+                                    <p ref=descriptions[i].clone()></p>
+                                }
+                            />
+                            </Item>
+                    </Container>
                 </Item>
             }
         })

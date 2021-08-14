@@ -5,7 +5,6 @@ use crate::utils::{set_scroll_style, set_scrollbar_state, ScrollStyle, Scrollbar
 use wasm_bindgen::JsCast;
 use web_sys::Element;
 use yew::prelude::*;
-use yew::services::ConsoleService;
 use yew::utils::{document, window};
 use yew_assets::business_assets::{BusinessAssets, BusinessIcon};
 use yew_assets::communication_assets::{CommunicationAssets, CommunicationIcon};
