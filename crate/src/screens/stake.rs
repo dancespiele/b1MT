@@ -68,7 +68,7 @@ fn get_cards(descriptions: Vec<NodeRef>) -> Html {
         .map(|(i, c)| {
             let stake_title = c;
             html! {
-                <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(6)]>
+                <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(6)]>
                     <Container
                         direction=Direction::Row wrap=Wrap::Wrap
                         justify_content=JustifyContent::Center(Mode::NoMode)

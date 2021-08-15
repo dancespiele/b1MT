@@ -35,16 +35,16 @@ impl Component for Home {
                 justify_content=JustifyContent::Center(Mode::NoMode)
                 align_items=AlignItems::Center(Mode::NoMode)
                 id="home">
-                <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItM(3))>
+                <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(3))>
                     <img class="logo-main-page" src="./1MTlite2.png" />
                 </Item>
-                <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItM(3)) align_self=AlignSelf::Center>
+                <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(3)) align_self=AlignSelf::Center>
                     <h3>{self.lang.description.clone()}</h3>
                 </Item>
-                <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItM(3))>
+                <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(3))>
                     <img class="logo-main-page" src="./P1MTMoon2b.png" />
                 </Item>
-                <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItM(3)) align_self=AlignSelf::Center>
+                <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(3)) align_self=AlignSelf::Center>
                     <h3>{self.lang.community_project.clone()}</h3>
                 </Item>
             </Container>

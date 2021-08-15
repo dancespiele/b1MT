@@ -72,15 +72,15 @@ fn get_cards(lang: Translations, partner_description_ref: NodeRef) -> Html {
         .map(|(i, c)| {
             let cards_title = c;
             html! {
-                <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(6), ItemLayout::ItL(12)] class_name="use-cases-content">
+                <Item layouts=vec![ItemLayout::ItXs(12)] class_name="use-cases-content">
                     <Container
                         direction=Direction::Row wrap=Wrap::Wrap
                         justify_content=JustifyContent::Center(Mode::NoMode)
                         align_items=AlignItems::Center(Mode::NoMode)>
-                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(3), ItemLayout::ItL(2)]>
+                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(2)]>
                             <img class="content-image" src=card_src[i] alt=cards_title.to_title_case()/>
                         </Item>
-                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(4), ItemLayout::ItL(4)]>
+                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(4)]>
                             <Text
                                 text_type=TextType::Title(Header::H3)
                                 plain_text=c.to_string()

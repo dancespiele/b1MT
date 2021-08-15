@@ -58,7 +58,7 @@ fn get_cards() -> Html {
             });
 
             html! {
-                <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(6)]>
+                <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(6)]>
                     <div class=tokenomics_class>
                         <Tooltip
                             content=html!{<span>{swap_title}</span>}

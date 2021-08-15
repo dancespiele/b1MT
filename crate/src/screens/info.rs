@@ -66,7 +66,7 @@ fn get_cards(lang: Translations) -> Html {
             });
 
             html! {
-                <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(6), ItemLayout::ItL(4)]>
+                <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(4)]>
                     <div class=tokenomics_class>
                         <Tooltip
                             content=html!{<span>{tooltip_title}</span>}
