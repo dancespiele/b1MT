@@ -9,11 +9,14 @@ extern crate gloo;
 extern crate inflector;
 extern crate js_sys;
 extern crate wasm_bindgen;
+extern crate wasm_bindgen_futures;
+extern crate wasm_request;
 extern crate web_sys;
 extern crate yew;
 extern crate yew_assets;
 extern crate yew_router;
 extern crate yew_styles;
+extern crate yewtil;
 
 use wasm_bindgen::prelude::*;
 
@@ -21,7 +24,9 @@ mod app;
 mod config;
 mod lang;
 mod screens;
+mod store;
 mod utils;
+
 use app::App;
 
 cfg_if! {

@@ -1,10 +1,13 @@
 use crate::config::Config;
 use crate::lang::Translations;
 use crate::screens::{Buy, Community, Home, Info, RoadMap, Stake, UseCases};
+use crate::store::{RequestCoingecko, TokenInfo, TokenInfoStore};
 use crate::utils::{set_scroll_style, set_scrollbar_state, ScrollStyle, ScrollbarState};
+use gloo::timers::callback::{Interval, Timeout};
 use wasm_bindgen::JsCast;
 use web_sys::Element;
 use yew::prelude::*;
+use yew::services::ConsoleService;
 use yew::utils::{document, window};
 use yew_assets::business_assets::{BusinessAssets, BusinessIcon};
 use yew_assets::communication_assets::{CommunicationAssets, CommunicationIcon};
@@ -31,14 +34,15 @@ use yew_styles::{
     text::{Text, TextType},
     tooltip::Tooltip,
 };
-
-use gloo::timers::callback::Timeout;
+use yewtil::store::{Bridgeable, ReadOnly, StoreWrapper};
 
 pub struct App {
     navbar_items: Vec<bool>,
     link: ComponentLink<Self>,
     close_navbar_mobile: bool,
     lang: Translations,
+    token_info: TokenInfo,
+    token_info_store: Box<dyn Bridge<StoreWrapper<TokenInfoStore>>>,
     route_agent: Box<dyn Bridge<RouteAgent<()>>>,
     route: Route<()>,
 }
@@ -67,10 +71,12 @@ pub enum Msg {
     ChangeNavbarItem(usize),
     NavbarItemInit(usize),
     CloseNavarMobile(MouseEvent),
+    GetTokenInfo,
     ScreenUp(usize),
     ScreenDown(usize, usize),
     ScrollMenu(WheelEvent),
     UpdateRoute(Route<()>),
+    TokenInfoMsg(ReadOnly<TokenInfoStore>),
 }
 
 impl Component for App {
@@ -81,12 +87,16 @@ impl Component for App {
         let route = Route::from("/".to_string());
         let callback_route = link.callback(Msg::UpdateRoute);
         let route_agent = RouteAgent::bridge(callback_route);
+        let token_info_callback = link.callback(Msg::TokenInfoMsg);
+        let token_info_store = TokenInfoStore::bridge(token_info_callback);
 
         App {
             navbar_items: vec![true, false, false, false, false, false, false],
             link,
             close_navbar_mobile: false,
             lang: Config::get_lang(),
+            token_info: TokenInfo::default(),
+            token_info_store,
             route,
             route_agent,
         }
@@ -94,6 +104,23 @@ impl Component for App {
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
+            Msg::TokenInfoMsg(state) => {
+                if let Some(token_info) = &state.borrow().token_info {
+                    self.token_info = token_info.clone();
+                }
+
+                if let Some(token_error) = state.borrow().token_info_error.clone() {
+                    ConsoleService::info(&format!(
+                        "Status: {}, Error: {}",
+                        token_error.status, token_error.message
+                    ))
+                }
+            }
+
+            Msg::GetTokenInfo => {
+                self.token_info_store.send(RequestCoingecko::Get1MT);
+            }
+
             Msg::NavbarItemInit(index) => {
                 for (i, _) in self.navbar_items.clone().into_iter().enumerate() {
                     self.navbar_items[i] = false;
@@ -211,6 +238,15 @@ impl Component for App {
             let screen = get_param();
             let screen_index = get_screen_index(&screen);
             self.link.send_message(Msg::NavbarItemInit(screen_index));
+
+            self.link.send_message(Msg::GetTokenInfo);
+
+            let token_info_callback = self.link.clone();
+
+            Interval::new(300000, move || {
+                token_info_callback.send_message(Msg::GetTokenInfo);
+            })
+            .forget();
         }
     }
 
@@ -233,6 +269,16 @@ impl Component for App {
                 </Navbar>
                 <div class="logo-b1mt">
                     <img src="/1MTlite2.png"/>
+                </div>
+                <div class="b1mt-market">
+                    <p>{format!("Price: {}$ | {}€",
+                        self.token_info.market_data.current_price.usd,
+                        self.token_info.market_data.current_price.eur,
+                    )}</p>
+                    <p>{format!("Market cap: {}$ | {}€",
+                        self.token_info.market_data.market_cap.usd,
+                        self.token_info.market_data.market_cap.eur,
+                    )}</p>
                 </div>
                 <div class="logo-1mt">
                     <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.png"/><span>{"1MT ETH"}</span></a>
