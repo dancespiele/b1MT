@@ -1,5 +1,6 @@
 use crate::config::Config;
 use crate::lang::Translations;
+use crate::screens::get_dots_icons;
 use crate::screens::{Buy, Community, Home, Info, RoadMap, Stake, UseCases};
 use crate::store::{RequestCoingecko, TokenInfo, TokenInfoStore};
 use crate::utils::{set_scroll_style, set_scrollbar_state, ScrollStyle, ScrollbarState};
@@ -9,9 +10,6 @@ use web_sys::Element;
 use yew::prelude::*;
 use yew::services::ConsoleService;
 use yew::utils::{document, window};
-use yew_assets::business_assets::{BusinessAssets, BusinessIcon};
-use yew_assets::communication_assets::{CommunicationAssets, CommunicationIcon};
-use yew_assets::ux_assets::{UxAssets, UxIcon};
 use yew_router::{
     agent::{RouteAgent, RouteRequest},
     prelude::*,
@@ -395,45 +393,47 @@ fn get_dot(index: usize, lang: Translations) -> Html {
         lang.community,
     ];
 
+    let dots = get_dots_icons();
+
     match index {
         0 => html! {
             <Tooltip content=get_text(&menus[0]) tooltip_position=Position::Right>
-                <UxAssets icon=UxIcon::Home size=("40".to_string(), "40".to_string())/>
+                {dots[0].clone()}
             </Tooltip>
         },
         1 => html! {
                 <Tooltip content=get_text(&menus[1]) tooltip_position=Position::Right>
-                    <BusinessAssets icon=BusinessIcon::TrendingUp size=("40".to_string(), "40".to_string())/>
+                    {dots[1].clone()}
                 </Tooltip>
         },
         2 => html! {
             <Tooltip content=get_text(&menus[2]) tooltip_position=Position::Right>
-                <UxAssets icon=UxIcon::Tool size=("40".to_string(), "40".to_string())/>
+                {dots[2].clone()}
             </Tooltip>
         },
         3 => html! {
             <Tooltip content=get_text(&menus[3]) tooltip_position=Position::Right>
-                <BusinessAssets icon=BusinessIcon::DollarSign size=("40".to_string(), "40".to_string())/>
+                {dots[3].clone()}
             </Tooltip>
         },
         4 => html! {
             <Tooltip content=get_text(&menus[4]) tooltip_position=Position::Right>
-                <UxAssets icon=UxIcon::Lock size=("40".to_string(), "40".to_string())/>
+                {dots[4].clone()}
             </Tooltip>
         },
         5 => html! {
             <Tooltip content=get_text(&menus[5]) tooltip_position=Position::Right>
-                <BusinessAssets icon=BusinessIcon::Target size=("40".to_string(), "40".to_string())/>
+                {dots[5].clone()}
             </Tooltip>
         },
         6 => html! {
             <Tooltip content=get_text(&menus[6]) tooltip_position=Position::Right>
-                <CommunicationAssets icon=CommunicationIcon::Smile size=("40".to_string(), "40".to_string())/>
+                {dots[6].clone()}
             </Tooltip>
         },
         _ => html! {
             <Tooltip content=get_text(&menus[0]) tooltip_position=Position::Right>
-                <UxAssets icon=UxIcon::Home size=("40".to_string(), "40".to_string())/>
+                {dots[7].clone()}
             </Tooltip>
         },
     }

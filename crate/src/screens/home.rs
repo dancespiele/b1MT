@@ -33,20 +33,37 @@ impl Component for Home {
             <Container
                 direction=Direction::Row wrap=Wrap::Wrap
                 justify_content=JustifyContent::Center(Mode::NoMode)
-                align_items=AlignItems::Center(Mode::NoMode)
+                align_items=AlignItems::FlexEnd(Mode::NoMode)
                 id="home">
-                <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(3))>
-                    <img class="logo-main-page" src="./1MTlite2.png" />
+                <Item layouts=vec!(ItemLayout::ItXs(5)) align_self=AlignSelf::FlexStart>
+                    <h2 class="slogan">{"Lorem Ipsum dolor sit amet"}</h2>
+                    <p class="slogan-description">
+                        {"Perfecto principes a Illud discere quo et, sea eu aperiam praesent. Nec ne prima rebum voluptatibus."}
+                    </p>
                 </Item>
-                <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(3)) align_self=AlignSelf::Center>
-                    <h3>{self.lang.description.clone()}</h3>
+                <Item layouts=vec!(ItemLayout::ItXs(7)) class_name="moon-target">
+                    <img src="/moon_target.png"/>
                 </Item>
-                <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(3))>
-                    <img class="logo-main-page" src="./P1MTMoon2b.png" />
-                </Item>
-                <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(3)) align_self=AlignSelf::Center>
-                    <h3>{self.lang.community_project.clone()}</h3>
-                </Item>
+
+                <Container
+                    direction=Direction::Row wrap=Wrap::Wrap
+                    justify_content=JustifyContent::Center(Mode::NoMode)
+                    align_items=AlignItems::FlexEnd(Mode::NoMode)
+                    class_name="home-description"
+                >
+                    <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(2))>
+                        <img class="logo-main-page" src="/1MTlite2.png" />
+                    </Item>
+                    <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(3)) align_self=AlignSelf::Center class_name="home-parragraph right-line">
+                        <p>{self.lang.description.clone()}</p>
+                    </Item>
+                    <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(2))>
+                        <img class="logo-main-page" src="/P1MTMoon2b.png" />
+                    </Item>
+                    <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(3)) align_self=AlignSelf::Center class_name="home-parragraph">
+                        <p>{self.lang.community_project.clone()}</p>
+                    </Item>
+                </Container>
             </Container>
         }
     }

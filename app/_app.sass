@@ -1,3 +1,11 @@
+@font-face
+  font-family: 'Kanit Bold'
+  src: url("/dist/typography/Kanit-Bold.ttf")
+
+@font-face
+  font-family: 'Kanit Regular'
+  src: url("/dist/typography/Kanit-Regular.ttf")
+
 @mixin set-scroll-style($animation, $direction)
   animation-name: $animation
   animation-duration: 2s
@@ -10,6 +18,8 @@
 
 .root
   height: 100%
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(229, 229, 229, 0.1575) 8.51%, rgba(11, 10, 10, 0.1575) 24.03%, rgba(11, 10, 10, 0.45) 98.22%)
+  font-family: Kanit Regular
 
 html
   height: 100%
@@ -24,7 +34,6 @@ body
 
 .content
   width: 100%
-  padding-top: 100px
 
 .screen
   height: 100%
@@ -60,8 +69,12 @@ body
     vertical-align: middle
 
 .carousel-dot
-  margin-bottom: 50%
+  margin-bottom: 44px
+  margin-top: 71px
   margin-left: 38px
+
+  &:last-of-type
+    margin-bottom: 0
 
 .logo-b1mt
   position: absolute
@@ -81,7 +94,7 @@ body
     width: 45px
 
 .b1mt-market
-  position: fixed
+  position: absolute
   top: 15px
   width: 100%
   text-align: center
