@@ -269,14 +269,8 @@ impl Component for App {
                     <img src="/1MTlite2.png"/>
                 </div>
                 <div class="b1mt-market">
-                    <p>{format!("Price: {}$ | {}€",
-                        self.token_info.market_data.current_price.usd,
-                        self.token_info.market_data.current_price.eur,
-                    )}</p>
-                    <p>{format!("Market cap: {}$ | {}€",
-                        self.token_info.market_data.market_cap.usd,
-                        self.token_info.market_data.market_cap.eur,
-                    )}</p>
+                    <div><span>{format!("Price: {}$", self.token_info.market_data.current_price.usd)}</span><span class="split-bar">{"|"}</span><span>{format!("{}€", self.token_info.market_data.current_price.eur)}</span></div>
+                    <div><span>{format!("Market cap: {}$", self.token_info.market_data.market_cap.usd)}</span><span class="split-bar">{"|"}</span><span>{format!("{}€", self.token_info.market_data.market_cap.eur)}</span></div>
                 </div>
                 <div class="logo-1mt">
                     <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.png"/><span>{"1MT ETH"}</span></a>
@@ -293,7 +287,8 @@ impl Component for App {
                                 {get_dots(self.navbar_items.to_vec(), self.link.clone(), self.lang.clone())}
                             </Container>
                         </Item>
-                        <Item layouts=vec!(ItemLayout::ItXs(10)) align_self=AlignSelf::Center class_name="content">
+                        <Item layouts=vec!(ItemLayout::ItXs(11)) align_self=AlignSelf::Center class_name="content">
+                            <div class="content-marging">
                             <Router<AppRouter, ()>
                                 render = Router::render(|switch: AppRouter| {
                                     match switch {
@@ -320,6 +315,7 @@ impl Component for App {
                                     AppRouter::PageNotFound(Permissive(Some(route.route)))
                                 })
                             />
+                            </div>
                         </Item>
                     </Container>
                 </Carousel>

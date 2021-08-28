@@ -35,6 +35,9 @@ body
 .content
   width: 100%
 
+  .content-marging
+    padding-right: 24px
+
 .screen
   height: 100%
 
@@ -71,33 +74,41 @@ body
 .carousel-dot
   margin-bottom: 44px
   margin-top: 71px
-  margin-left: 38px
+  margin-left: 58px
 
   &:last-of-type
     margin-bottom: 0
 
 .logo-b1mt
   position: absolute
-  top: 15px
-  left: 10px
+  top: 18px
+  left: 24px
 
   img
     width: 100px
 
 .logo-1mt
   position: absolute
-  top: 15px
-  right: 10px
+  top: 35px
+  right: 24px
   z-index: 1
+  padding: 10px
+  background: rgba(11, 10, 10, 0.45)
+  border-radius: 30px
 
   img
     width: 45px
 
 .b1mt-market
   position: absolute
-  top: 15px
+  top: 33px
   width: 100%
+  font-size: 22px
   text-align: center
+  letter-spacing: 0.1em
+
+.split-bar
+  margin: 0 20px
 
 @media (max-width: 991px)
   .dots, .logo-1mt, .logo-b1mt
@@ -105,7 +116,6 @@ body
 
   .b1mt-market
     top: 50px
-
 
 #home, #buy, #info, #roadmap, #use-cases, #stake
   &.scroll-down

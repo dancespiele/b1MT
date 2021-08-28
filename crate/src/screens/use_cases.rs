@@ -77,10 +77,10 @@ fn get_cards(lang: Translations, partner_description_ref: NodeRef) -> Html {
                         direction=Direction::Row wrap=Wrap::Wrap
                         justify_content=JustifyContent::Center(Mode::NoMode)
                         align_items=AlignItems::Center(Mode::NoMode)>
-                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(2)]>
+                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(1)]>
                             <img class="content-image" src=card_src[i] alt=cards_title.to_title_case()/>
                         </Item>
-                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(4)]>
+                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(3)]>
                             <Text
                                 text_type=TextType::Title(Header::H3)
                                 plain_text=c.to_string()
