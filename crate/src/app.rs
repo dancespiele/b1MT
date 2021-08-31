@@ -6,7 +6,7 @@ use crate::store::{RequestCoingecko, TokenInfo, TokenInfoStore};
 use crate::utils::{set_scroll_style, set_scrollbar_state, ScrollStyle, ScrollbarState};
 use gloo::timers::callback::{Interval, Timeout};
 use wasm_bindgen::JsCast;
-use web_sys::Element;
+use web_sys::{Element, HtmlElement};
 use yew::prelude::*;
 use yew::services::ConsoleService;
 use yew::utils::{document, window};
@@ -41,28 +41,6 @@ pub struct App {
     lang: Translations,
     token_info: TokenInfo,
     token_info_store: Box<dyn Bridge<StoreWrapper<TokenInfoStore>>>,
-    route_agent: Box<dyn Bridge<RouteAgent<()>>>,
-    route: Route<()>,
-}
-
-#[derive(Switch, Debug, Clone)]
-pub enum AppRouter {
-    #[to = "/!"]
-    HomePath,
-    #[to = "/info!"]
-    InfoPath,
-    #[to = "/use-cases"]
-    UseCasesPath,
-    #[to = "/buy!"]
-    BuyPath,
-    #[to = "/stake"]
-    StakePath,
-    #[to = "/roadmap"]
-    RoadMapPath,
-    #[to = "/community"]
-    CommunityPath,
-    #[to = "/page-not-found"]
-    PageNotFound(Permissive<String>),
 }
 
 pub enum Msg {
@@ -82,9 +60,6 @@ impl Component for App {
     type Properties = ();
 
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let route = Route::from("/".to_string());
-        let callback_route = link.callback(Msg::UpdateRoute);
-        let route_agent = RouteAgent::bridge(callback_route);
         let token_info_callback = link.callback(Msg::TokenInfoMsg);
         let token_info_store = TokenInfoStore::bridge(token_info_callback);
 
@@ -95,8 +70,6 @@ impl Component for App {
             lang: Config::get_lang(),
             token_info: TokenInfo::default(),
             token_info_store,
-            route,
-            route_agent,
         }
     }
 
@@ -127,10 +100,11 @@ impl Component for App {
                 self.navbar_items[index] = true;
             }
             Msg::ChangeNavbarItem(index) => {
-                self.route_agent.send(RouteRequest::ChangeRoute(Route {
-                    route: get_route(index),
-                    state: (),
-                }));
+                for (i, _) in self.navbar_items.clone().into_iter().enumerate() {
+                    self.navbar_items[i] = false;
+                }
+
+                self.navbar_items[index] = true;
             }
 
             Msg::ScreenUp(index) => {
@@ -160,36 +134,36 @@ impl Component for App {
                 }
             }
             Msg::ScrollMenu(wheel_event) => {
-                let len = self.navbar_items.len();
-                let index_opt = self.navbar_items.to_vec().into_iter().position(|ai| ai);
-
-                if let Some(index) = index_opt {
-                    let screen_id = get_screen_id(index);
-                    if wheel_event.delta_y() < 0.00 && check_scroll_leave_div_screen_up() {
-                        set_scrollbar_state(ScrollbarState::Hidden);
-                        let callback_screen_up = self.link.clone();
-                        set_scroll_style(ScrollStyle::ScrollUp, &screen_id, "scroll");
-                        Timeout::new(500, move || {
-                            callback_screen_up.send_message(Msg::ScreenUp(index))
-                        })
-                        .forget();
-                    } else if check_scroll_leave_div_screen_down() {
-                        let callback_screen_down = self.link.clone();
-                        set_scroll_style(ScrollStyle::ScrollDown, &screen_id, "scroll");
-                        Timeout::new(500, move || {
-                            callback_screen_down.send_message(Msg::ScreenDown(index, len))
-                        })
-                        .forget();
-                    }
-                }
+                // let len = self.navbar_items.len();
+                // let index_opt = self.navbar_items.to_vec().into_iter().position(|ai| ai);
+                //
+                // if let Some(index) = index_opt {
+                //     let screen_id = get_screen_id(index);
+                //     if wheel_event.delta_y() < 0.00 && check_scroll_leave_div_screen_up() {
+                //         set_scrollbar_state(ScrollbarState::Hidden);
+                //         let callback_screen_up = self.link.clone();
+                //         set_scroll_style(ScrollStyle::ScrollUp, &screen_id, "scroll");
+                //         Timeout::new(500, move || {
+                //             callback_screen_up.send_message(Msg::ScreenUp(index))
+                //         })
+                //         .forget();
+                //     } else if check_scroll_leave_div_screen_down() {
+                //         let callback_screen_down = self.link.clone();
+                //         set_scroll_style(ScrollStyle::ScrollDown, &screen_id, "scroll");
+                //         Timeout::new(500, move || {
+                //             callback_screen_down.send_message(Msg::ScreenDown(index, len))
+                //         })
+                //         .forget();
+                //     }
+                // }
             }
+
             Msg::UpdateRoute(route) => {
                 let index = get_screen_index(&route.route);
                 for (i, _) in self.navbar_items.clone().into_iter().enumerate() {
                     self.navbar_items[i] = false;
                 }
                 self.navbar_items[index] = true;
-                self.route = route;
             }
             Msg::CloseNavarMobile(mouse_event) => {
                 let target_class = mouse_event
@@ -229,15 +203,9 @@ impl Component for App {
 
     fn rendered(&mut self, first_render: bool) {
         if first_render {
-            for (i, _) in self.navbar_items.clone().into_iter().enumerate() {
-                self.navbar_items[i] = false;
-            }
-
-            let screen = get_param();
-            let screen_index = get_screen_index(&screen);
-            self.link.send_message(Msg::NavbarItemInit(screen_index));
-
             self.link.send_message(Msg::GetTokenInfo);
+
+            set_screens_height();
 
             let token_info_callback = self.link.clone();
 
@@ -277,7 +245,7 @@ impl Component for App {
                 <div class="logo-1mt">
                     <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.png"/><span>{"1MT ETH"}</span></a>
                 </div>
-                <Carousel class_name="carousel" id="screen" onwheel_signal= self.link.callback(Msg::ScrollMenu)>
+                <Carousel class_name="carousel" onwheel_signal= self.link.callback(Msg::ScrollMenu)>
                     <Container direction=Direction::Row wrap=Wrap::Wrap class_name="screen" justify_content=JustifyContent::FlexStart(Mode::NoMode)>
                         <Item layouts=vec!(ItemLayout::ItXs(1)) align_self=AlignSelf::Center class_name="content">
                             <Container
@@ -290,39 +258,41 @@ impl Component for App {
                             </Container>
                         </Item>
                         <Item layouts=vec!(ItemLayout::ItXs(11)) align_self=AlignSelf::Center class_name="content">
-                            <div class="content-marging">
-                            <Router<AppRouter, ()>
-                                render = Router::render(|switch: AppRouter| {
-                                    match switch {
-                                        AppRouter::HomePath => html! {
-                                            <Home/>
-                                        },
-                                        AppRouter::InfoPath => html! {
-                                            <Info/>
-                                        },
-                                        AppRouter::UseCasesPath => html! {
-                                            <UseCases/>
-                                        },
-                                        AppRouter::BuyPath => html! {
-                                            <Buy/>
-                                        },
-                                        AppRouter::StakePath => html!{<Stake/>},
-                                        AppRouter::RoadMapPath => html!{<RoadMap/>},
-                                        AppRouter::CommunityPath => html!{<Community/>},
-                                        AppRouter::PageNotFound(Permissive(None)) => html!{<h1>{"Page not found"}</h1>},
-                                        AppRouter::PageNotFound(Permissive(Some(missed_route))) => html!{<h1>{format!("Page '{}' not found", missed_route)}</h1>}
-                                    }
-                                })
-                                redirect = Router::redirect(|route: Route<()>| {
-                                    AppRouter::PageNotFound(Permissive(Some(route.route)))
-                                })
-                            />
-                            </div>
+                            <Home/>
+                            <Info/>
+                            <UseCases/>
+                            <Buy/>
+                            <Stake/>
+                            <RoadMap/>
+                            <Community/>
                         </Item>
                     </Container>
                 </Carousel>
             </div>
         }
+    }
+}
+
+fn set_screens_height() {
+    let window_height = window().inner_height().unwrap();
+
+    let screen_nodes = document().query_selector_all(".screen").unwrap();
+
+    let height_screen = window_height.as_f64().unwrap();
+
+    let height_screen_value = height_screen.to_string();
+
+    for i in 1..screen_nodes.length() {
+        let element = screen_nodes
+            .get(i)
+            .unwrap()
+            .dyn_into::<HtmlElement>()
+            .unwrap()
+            .style();
+
+        element
+            .set_property("height", &format!("{}px", height_screen_value))
+            .unwrap();
     }
 }
 
@@ -369,14 +339,14 @@ fn get_param() -> String {
 
 fn get_route(index: usize) -> String {
     match index {
-        0 => String::from("/"),
-        1 => String::from("/info"),
-        2 => String::from("/use-cases"),
-        3 => String::from("/buy"),
-        4 => String::from("/stake"),
-        5 => String::from("/roadmap"),
-        6 => String::from("/community"),
-        _ => String::from("/"),
+        0 => String::from("home"),
+        1 => String::from("info"),
+        2 => String::from("use-cases"),
+        3 => String::from("buy"),
+        4 => String::from("stake"),
+        5 => String::from("roadmap"),
+        6 => String::from("community"),
+        _ => String::from("home"),
     }
 }
 
@@ -439,12 +409,12 @@ fn get_dot(index: usize, lang: Translations) -> Html {
 
 fn get_screen_index(screen: &str) -> usize {
     match screen {
-        "/info" => 1,
-        "/use-cases" => 2,
-        "/buy" => 3,
-        "/stake" => 4,
-        "/roadmap" => 5,
-        "/community" => 6,
+        "info" => 1,
+        "use-cases" => 2,
+        "buy" => 3,
+        "stake" => 4,
+        "roadmap" => 5,
+        "community" => 6,
         &_ => 0,
     }
 }
@@ -455,7 +425,9 @@ fn get_dots(items: Vec<bool>, link: ComponentLink<App>, lang: Translations) -> H
     for (i, _) in items.clone().into_iter().enumerate() {
         dot.push(html! {
             <CarouselDot active=items[i] onclick_signal = link.callback(move |_| Msg::ChangeNavbarItem(i))>
-                {get_dot(i, lang.clone())}
+                <a href=format!("#{}",get_route(i))>
+                    {get_dot(i, lang.clone())}
+                </a>
             </CarouselDot>
         })
     }

@@ -37,6 +37,7 @@ impl Component for Community {
                 direction=Direction::Row wrap=Wrap::Wrap
                 justify_content=JustifyContent::Center(Mode::NoMode)
                 align_items=AlignItems::Center(Mode::NoMode)
+                class_name="screen"
                 id="community">
                     <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(8)] class_name="community-content">
                         <Container

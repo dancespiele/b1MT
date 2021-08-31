@@ -50,6 +50,7 @@ impl Component for Stake {
                 direction=Direction::Row wrap=Wrap::Wrap
                 justify_content=JustifyContent::Center(Mode::NoMode)
                 align_items=AlignItems::Center(Mode::NoMode)
+                class_name="screen"
                 id="stake">
                 {get_cards(vec![self.kennel_description_ref.clone()])}
             </Container>

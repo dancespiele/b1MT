@@ -34,6 +34,7 @@ impl Component for Home {
                 direction=Direction::Row wrap=Wrap::Wrap
                 justify_content=JustifyContent::FlexStart(Mode::NoMode)
                 align_items=AlignItems::FlexEnd(Mode::NoMode)
+                class_name="screen"
                 id="home">
                 <Item layouts=vec!(ItemLayout::ItXs(4)) align_self=AlignSelf::Center>
                     <h2 class="slogan">{"Lorem Ipsum dolor sit amet"}</h2>

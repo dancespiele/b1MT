@@ -17,7 +17,6 @@
     height: 100%
 
 .root
-  height: 100%
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(229, 229, 229, 0.1575) 8.51%, rgba(11, 10, 10, 0.1575) 24.03%, rgba(11, 10, 10, 0.45) 98.22%)
   font-family: Kanit Regular
 
@@ -28,6 +27,11 @@ body
     padding: 0
     margin: 0
     height: 100%
+    -ms-overflow-style: none
+    scrollbar-width: none
+
+body::-webkit-scrollbar
+  display: none
 
 .navbar
   display: none
@@ -39,11 +43,13 @@ body
     padding-right: 24px
 
 .screen
-  height: 100%
+  padding-bottom: 200px
 
 .dots
   height: 100%
+  position: fixed
   display: flex
+  top: 20%
 
   .carousel-dot
     padding-right: 10px

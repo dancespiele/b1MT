@@ -31,6 +31,7 @@ impl Component for Buy {
                 direction=Direction::Row wrap=Wrap::Wrap
                 justify_content=JustifyContent::FlexStart(Mode::NoMode)
                 align_items=AlignItems::FlexStart(Mode::NoMode)
+                class_name="screen"
                 id="buy">
                 {get_cards()}
             </Container>

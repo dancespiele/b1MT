@@ -29,6 +29,7 @@ impl Component for Info {
                 direction=Direction::Column wrap=Wrap::Wrap
                 justify_content=JustifyContent::Center(Mode::NoMode)
                 align_items=AlignItems::FlexStart(Mode::NoMode)
+                class_name="screen"
                 id="info">
                 {get_cards()}
             </Container>
