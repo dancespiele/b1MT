@@ -5,7 +5,7 @@ use web_sys::HtmlElement;
 use yew::prelude::*;
 use yew_styles::layouts::{
     container::{AlignItems, Container, Direction, JustifyContent, Mode, Wrap},
-    item::{Item, ItemLayout},
+    item::{AlignSelf, Item, ItemLayout},
 };
 use yew_styles::styles::Size;
 use yew_styles::text::{Header, Text, TextType};
@@ -64,7 +64,7 @@ impl Component for UseCases {
 fn get_cards(lang: Translations, partner_description_ref: NodeRef) -> Html {
     let cards_title = vec!["1MT Vegas Casino", &lang.partner_with_1mt];
 
-    let card_src = vec!["/vc1mt.png", "/1MTlite2.png"];
+    let card_src = vec!["/vc1mt.svg", "/b1mt.svg"];
 
     cards_title
         .into_iter()
@@ -72,22 +72,24 @@ fn get_cards(lang: Translations, partner_description_ref: NodeRef) -> Html {
         .map(|(i, c)| {
             let cards_title = c;
             html! {
-                <Item layouts=vec![ItemLayout::ItXs(12)] class_name="use-cases-content">
+                <Item layouts=vec![ItemLayout::ItXs(12)] class_name="use-cases-content" align_self=AlignSelf::FlexStart>
                     <Container
                         direction=Direction::Row wrap=Wrap::Wrap
                         justify_content=JustifyContent::Center(Mode::NoMode)
                         align_items=AlignItems::Center(Mode::NoMode)>
-                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(1)]>
-                            <img class="content-image" src=card_src[i] alt=cards_title.to_title_case()/>
+                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(1)] align_self=AlignSelf::FlexStart>
+                            <img class="use-cases-image" src=card_src[i] alt=cards_title.to_title_case()/>
                         </Item>
-                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(3)]>
+                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(4)]>
                             <Text
-                                text_type=TextType::Title(Header::H3)
+                                text_type=TextType::Title(Header::H2)
                                 plain_text=c.to_string()
+                                class_name="use-cases-title"
                             />
                             <Text
                                 text_type=TextType::Plain
                                 text_size=Size::Medium
+                                class_name="use-cases-description"
                                 html_text=html!{
                                     if c == lang.partner_with_1mt {
                                         html!{

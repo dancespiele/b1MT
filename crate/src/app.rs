@@ -269,8 +269,10 @@ impl Component for App {
                     <img src="/1MTlite2.png"/>
                 </div>
                 <div class="b1mt-market">
-                    <div><span>{format!("Price: {}$", self.token_info.market_data.current_price.usd)}</span><span class="split-bar">{"|"}</span><span>{format!("{}€", self.token_info.market_data.current_price.eur)}</span></div>
-                    <div><span>{format!("Market cap: {}$", self.token_info.market_data.market_cap.usd)}</span><span class="split-bar">{"|"}</span><span>{format!("{}€", self.token_info.market_data.market_cap.eur)}</span></div>
+                    <div class="b1mt-market-content">
+                        <div><span>{format!("Price: {}$", self.token_info.market_data.current_price.usd)}</span><span class="split-bar">{"|"}</span><span>{format!("{}€", self.token_info.market_data.current_price.eur)}</span></div>
+                        <div><span>{format!("Market cap: {}$", self.token_info.market_data.market_cap.usd)}</span><span class="split-bar">{"|"}</span><span>{format!("{}€", self.token_info.market_data.market_cap.eur)}</span></div>
+                    </div>
                 </div>
                 <div class="logo-1mt">
                     <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.png"/><span>{"1MT ETH"}</span></a>

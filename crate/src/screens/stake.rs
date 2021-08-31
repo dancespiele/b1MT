@@ -5,7 +5,7 @@ use web_sys::HtmlElement;
 use yew::prelude::*;
 use yew_styles::layouts::{
     container::{AlignItems, Container, Direction, JustifyContent, Mode, Wrap},
-    item::{Item, ItemLayout},
+    item::{AlignSelf, Item, ItemLayout},
 };
 use yew_styles::styles::Size;
 use yew_styles::text::{Header, Text, TextType};
@@ -60,7 +60,7 @@ impl Component for Stake {
 fn get_cards(descriptions: Vec<NodeRef>) -> Html {
     let stake_titles = vec!["The Token Kennel"];
     let pools_url = vec!["https://thetokenkennel.com/boarding/#/"];
-    let icon_src = vec!["/token_kennel_logo.jpg"];
+    let icon_src = vec!["/token_kennel.svg"];
 
     stake_titles
         .into_iter()
@@ -73,12 +73,12 @@ fn get_cards(descriptions: Vec<NodeRef>) -> Html {
                         direction=Direction::Row wrap=Wrap::Wrap
                         justify_content=JustifyContent::Center(Mode::NoMode)
                         align_items=AlignItems::Center(Mode::NoMode)>
-                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(3), ItemLayout::ItL(2)]>
+                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(3), ItemLayout::ItL(2)] align_self=AlignSelf::FlexStart>
                             <a href=pools_url[i] target="_blank">
                                 <img class="kennel-image" src=icon_src[i] alt=stake_title.to_title_case()/>
                             </a>
                         </Item>
-                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(6), ItemLayout::ItL(6)]>
+                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(6), ItemLayout::ItL(7)]>
                             <Text
                                 class_name="kennel-title"
                                 text_type=TextType::Title(Header::H3)

@@ -29,8 +29,8 @@ impl Component for Buy {
         html! {
             <Container
                 direction=Direction::Row wrap=Wrap::Wrap
-                justify_content=JustifyContent::Center(Mode::NoMode)
-                align_items=AlignItems::Center(Mode::NoMode)
+                justify_content=JustifyContent::FlexStart(Mode::NoMode)
+                align_items=AlignItems::FlexStart(Mode::NoMode)
                 id="buy">
                 {get_cards()}
             </Container>
@@ -44,7 +44,7 @@ fn get_cards() -> Html {
         "https://v1exchange.pancakeswap.finance/#/swap?outputCurrency=0x8d67448d4f6231ABc070a42A8905084b79E09136",
         "https://dex.guru/token/0x8d67448d4f6231abc070a42a8905084b79e09136-bsc"
     ];
-    let icons_src = vec!["/pancakeswap_logo.png", "/dex_guru.png"];
+    let icons_src = vec!["/pancakeswap_swap.svg", "/dex_guru.svg"];
 
     swaps_title
         .into_iter()
@@ -58,7 +58,7 @@ fn get_cards() -> Html {
             });
 
             html! {
-                <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(6)]>
+                <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(12)]>
                     <div class=tokenomics_class>
                         <Tooltip
                             content=html!{<span>{swap_title}</span>}
