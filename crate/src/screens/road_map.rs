@@ -1,36 +1,71 @@
-use crate::config::Config;
-use crate::lang::Translations;
-use wasm_bindgen::prelude::*;
-use wasm_bindgen::JsCast;
-use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
+use web_sys::Element;
 use yew::prelude::*;
+use yew::services::ConsoleService;
 use yew::utils::document;
 use yew_styles::layouts::{
     container::{Container, Direction, JustifyContent, Mode, Wrap},
     item::{Item, ItemLayout},
 };
 
-pub struct RoadMapText {
-    text: String,
-    done: bool,
+pub struct RoadMap {
+    left: i32,
+    top: i32,
+    x: i32,
+    y: i32,
+    element: Option<Element>,
+    is_dragging: bool,
+    link: ComponentLink<Self>,
 }
 
-pub struct RoadMap {
-    lang: Translations,
+pub enum Msg {
+    MouseMoveHandler(MouseEvent),
+    MouseUpHandler,
+    MouseDownHandler(MouseEvent),
 }
 
 impl Component for RoadMap {
     type Properties = ();
-    type Message = ();
+    type Message = Msg;
 
-    fn create(_: Self::Properties, _: ComponentLink<Self>) -> Self {
+    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
         Self {
-            lang: Config::get_lang(),
+            left: 0,
+            top: 0,
+            x: 0,
+            y: 0,
+            element: None,
+            is_dragging: false,
+            link,
         }
     }
 
-    fn update(&mut self, _: Self::Message) -> ShouldRender {
-        false
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        match msg {
+            Msg::MouseMoveHandler(event) => {
+                if let Some(element) = self.element.clone() {
+                    if self.is_dragging {
+                        let dx = event.client_x() - self.x;
+                        let dy = event.client_y() - self.y;
+                        element.set_scroll_top(self.top - dy);
+                        element.set_scroll_left(self.left - dx);
+                    }
+                }
+            }
+            Msg::MouseUpHandler => {
+                self.is_dragging = false;
+            }
+            Msg::MouseDownHandler(event) => {
+                event.prevent_default();
+                if let Some(element) = self.element.clone() {
+                    self.is_dragging = true;
+                    self.left = element.scroll_left();
+                    self.top = element.scroll_top();
+                    self.x = event.client_x();
+                    self.y = event.client_y();
+                }
+            }
+        }
+        true
     }
 
     fn change(&mut self, _: Self::Properties) -> ShouldRender {
@@ -39,118 +74,29 @@ impl Component for RoadMap {
 
     fn rendered(&mut self, first_render: bool) {
         if first_render {
-            draw_horizontal_line(get_text(self.lang.clone()));
+            let scrollgrab_element = document().get_element_by_id("scrollgrab").unwrap();
+
+            self.element = Some(scrollgrab_element.clone());
+            self.left = 500;
+            self.top = 500;
         }
     }
 
     fn view(&self) -> Html {
         html! {
             <Container direction=Direction::Row wrap=Wrap::Wrap justify_content=JustifyContent::Center(Mode::NoMode) id="roadmap">
-                <Item layouts=vec![ItemLayout::ItXs(12)]>
-                    <canvas id="canvas" width="800" height="500">
-                    </canvas>
+                <Item layouts=vec![ItemLayout::ItXs(8)]>
+                    <div
+                        onmouseup=self.link.callback(|_| Msg::MouseUpHandler)
+                        onmousemove=self.link.callback(Msg::MouseMoveHandler)
+                        onmousedown=self.link.callback(Msg::MouseDownHandler)
+                        id="scrollgrab"
+                        class="scrollgrab"
+                >
+                        <img src="/roadmap.svg" alt="roadmap"/>
+                    </div>
                 </Item>
             </Container>
         }
     }
-}
-
-fn get_context_2d() -> CanvasRenderingContext2d {
-    let canvas = document().get_element_by_id("canvas").unwrap();
-
-    let canvas: HtmlCanvasElement = canvas
-        .dyn_into::<HtmlCanvasElement>()
-        .map_err(|_| ())
-        .unwrap();
-
-    canvas
-        .get_context("2d")
-        .unwrap()
-        .unwrap()
-        .dyn_into::<CanvasRenderingContext2d>()
-        .unwrap()
-}
-
-fn get_text(lang: Translations) -> Vec<RoadMapText> {
-    vec![
-        RoadMapText {
-            text: lang.launch,
-            done: true,
-        },
-        RoadMapText {
-            text: lang.governance,
-            done: true,
-        },
-        RoadMapText {
-            text: lang.kennel_token_pool,
-            done: true,
-        },
-        RoadMapText {
-            text: lang.web,
-            done: true,
-        },
-        RoadMapText {
-            text: lang.swap_web,
-            done: false,
-        },
-        RoadMapText {
-            text: lang.partner_app,
-            done: false,
-        },
-        RoadMapText {
-            text: lang.automata_token,
-            done: false,
-        },
-        RoadMapText {
-            text: lang.cross_swap,
-            done: false,
-        },
-        RoadMapText {
-            text: lang.governance_web,
-            done: false,
-        },
-    ]
-}
-
-fn draw_horizontal_line(road_map_text: Vec<RoadMapText>) {
-    let context = get_context_2d();
-
-    let x = 280.0;
-    let y = 0.0;
-
-    context.begin_path();
-
-    context.move_to(x, y);
-    context.line_to(x, 500.0);
-    context.set_font("14px serif");
-
-    road_map_text.into_iter().enumerate().for_each(|(i, t)| {
-        let text_color = if t.done {
-            JsValue::from_str("#2DBCC9")
-        } else {
-            JsValue::from_str("#0E6979")
-        };
-
-        context.set_fill_style(&text_color);
-
-        let n = i + 1;
-        let yh = n as f64 * 50.0;
-        if n != 1 && n % 2 == 0 {
-            let xh = 0.0;
-            context.move_to(x, yh);
-            context.line_to(xh, yh);
-            context.fill_text(&t.text, xh, yh - 10.0).unwrap();
-        } else {
-            let xh = 600.0;
-            context.move_to(x, yh);
-            context.line_to(xh, yh);
-            context.fill_text(&t.text, xh - 300.0, yh - 10.0).unwrap();
-        }
-
-        context.set_stroke_style(&text_color);
-    });
-
-    context.set_line_width(5.0);
-    context.fill();
-    context.stroke();
 }

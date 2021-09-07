@@ -3,7 +3,7 @@ use crate::lang::Translations;
 use crate::screens::get_dots_icons;
 use crate::screens::{Buy, Community, Home, Info, RoadMap, Stake, UseCases};
 use crate::store::{RequestCoingecko, TokenInfo, TokenInfoStore};
-use crate::utils::{set_scroll_style, set_scrollbar_state, ScrollStyle, ScrollbarState};
+use crate::utils::{set_scroll_style, ScrollStyle};
 use gloo::timers::callback::{Interval, Timeout};
 use wasm_bindgen::JsCast;
 use web_sys::Element;
@@ -144,8 +144,6 @@ impl Component for App {
                     self.navbar_items[index - 1] = true;
                     self.link.send_message(Msg::ChangeNavbarItem(index - 1));
                 }
-
-                set_scrollbar_state(ScrollbarState::Auto);
             }
             Msg::ScreenDown(index, len) => {
                 for (i, _) in self.navbar_items.clone().into_iter().enumerate() {
@@ -166,7 +164,6 @@ impl Component for App {
                 if let Some(index) = index_opt {
                     let screen_id = get_screen_id(index);
                     if wheel_event.delta_y() < 0.00 && check_scroll_leave_div_screen_up() {
-                        set_scrollbar_state(ScrollbarState::Hidden);
                         let callback_screen_up = self.link.clone();
                         set_scroll_style(ScrollStyle::ScrollUp, &screen_id, "scroll");
                         Timeout::new(500, move || {
@@ -265,62 +262,102 @@ impl Component for App {
                         <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.png"/><span>{"1MT ETH"}</span></a>
                     </NavbarContainer>
                 </Navbar>
-                <div class="logo-b1mt">
-                    <img src="/1MTlite2.png"/>
-                </div>
-                <div class="b1mt-market">
-                    <div class="b1mt-market-content">
-                        <div><span>{format!("Price: {}$", self.token_info.market_data.current_price.usd)}</span><span class="split-bar">{"|"}</span><span>{format!("{}€", self.token_info.market_data.current_price.eur)}</span></div>
-                        <div><span>{format!("Market cap: {}$", self.token_info.market_data.market_cap.usd)}</span><span class="split-bar">{"|"}</span><span>{format!("{}€", self.token_info.market_data.market_cap.eur)}</span></div>
-                    </div>
-                </div>
-                <div class="logo-1mt">
-                    <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.png"/><span>{"1MT ETH"}</span></a>
-                </div>
-                <Carousel class_name="carousel" id="screen" onwheel_signal= self.link.callback(Msg::ScrollMenu)>
-                    <Container direction=Direction::Row wrap=Wrap::Wrap class_name="screen" justify_content=JustifyContent::FlexStart(Mode::NoMode)>
-                        <Item layouts=vec!(ItemLayout::ItXs(1)) align_self=AlignSelf::Center class_name="content">
-                            <Container
-                                direction=Direction::Column wrap=Wrap::Wrap
-                                justify_content=JustifyContent::FlexStart(Mode::NoMode)
-                                align_items=AlignItems::FlexStart(Mode::NoMode)
+                <Container
+                    direction=Direction::Column wrap=Wrap::Wrap
+                    justify_content=JustifyContent::FlexStart(Mode::NoMode)
+                    align_items=AlignItems::FlexStart(Mode::NoMode)
+                    align_content=AlignContent::FlexStart(Mode::NoMode)
+                    class_name="content-container"
+                >
+                    <Item layouts=vec![ItemLayout::ItXs(1)] class_name="header">
+                        <Container
+                            direction=Direction::Row wrap=Wrap::Wrap
+                            justify_content=JustifyContent::FlexStart(Mode::NoMode)
+                            align_items=AlignItems::Center(Mode::NoMode)
+                            align_content=AlignContent::Center(Mode::NoMode)
+                            class_name="header-content"
+                        >
+                            <Item layouts=vec![ItemLayout::ItXs(4)] align_self=AlignSelf::Center class_name="logo-b1mt">
+                                <img src="/1MTlite2.png"/>
+                            </Item>
+                            <Item layouts=vec![ItemLayout::ItXs(4)] align_self=AlignSelf::Center class_name="b1mt-market">
+                                <div class="b1mt-market-content">
+                                    <div><span>{format!("Price: {}$", self.token_info.market_data.current_price.usd)}</span><span class="split-bar">{"|"}</span><span>{format!("{}€", self.token_info.market_data.current_price.eur)}</span></div>
+                                    <div><span>{format!("Market cap: {}$", self.token_info.market_data.market_cap.usd)}</span><span class="split-bar">{"|"}</span><span>{format!("{}€", self.token_info.market_data.market_cap.eur)}</span></div>
+                                </div>
+                            </Item>
+                            <Item layouts=vec![ItemLayout::ItXs(4)] align_self=AlignSelf::Center class_name="content-1mt">
+                                <Container
+                                    direction=Direction::Row wrap=Wrap::Wrap
+                                    justify_content=JustifyContent::FlexEnd(Mode::NoMode)
+                                    class_name="container-1mt"
+                                >
+                                <Item layouts=vec![ItemLayout::ItXs(4)]>
+                                    <div class="logo-1mt">
+                                        <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.png"/><span>{"1MT ETH"}</span></a>
+                                    </div>
+                                </Item>
+                                </Container>
+                            </Item>
+                        </Container>
+                    </Item>
+                    <Item layouts=vec![ItemLayout::ItXs(11)] class_name="content-body">
+                        <Carousel class_name="carousel" id="screen" onwheel_signal= self.link.callback(Msg::ScrollMenu)>
+                            <Container direction=Direction::Row wrap=Wrap::Wrap class_name=format!("screen {}", {
+                                let screen = get_param();
+                                let screen_index = get_screen_index(&screen);
+                                let mut route = get_route(screen_index).replace("/", "");
+                                if route.is_empty() {
+                                    route = String::from("home");
+                                }
+                                route
+                            }) justify_content=JustifyContent::FlexStart(Mode::NoMode)
                                 align_content=AlignContent::FlexStart(Mode::NoMode)
-                                class_name="dots">
-                                {get_dots(self.navbar_items.to_vec(), self.link.clone(), self.lang.clone())}
+                            >
+                                <Item layouts=vec!(ItemLayout::ItXs(1)) align_self=AlignSelf::FlexStart class_name="content">
+                                    <Container
+                                        direction=Direction::Column wrap=Wrap::Wrap
+                                        justify_content=JustifyContent::FlexStart(Mode::NoMode)
+                                        align_items=AlignItems::FlexStart(Mode::NoMode)
+                                        align_content=AlignContent::FlexStart(Mode::NoMode)
+                                        class_name="dots">
+                                        {get_dots(self.navbar_items.to_vec(), self.link.clone(), self.lang.clone())}
+                                    </Container>
+                                </Item>
+                                <Item layouts=vec!(ItemLayout::ItXs(11)) align_self=AlignSelf::Center class_name="content">
+                                    <div class="content-marging">
+                                    <Router<AppRouter, ()>
+                                        render = Router::render(|switch: AppRouter| {
+                                            match switch {
+                                                AppRouter::HomePath => html! {
+                                                    <Home/>
+                                                },
+                                                AppRouter::InfoPath => html! {
+                                                    <Info/>
+                                                },
+                                                AppRouter::UseCasesPath => html! {
+                                                    <UseCases/>
+                                                },
+                                                AppRouter::BuyPath => html! {
+                                                    <Buy/>
+                                                },
+                                                AppRouter::StakePath => html!{<Stake/>},
+                                                AppRouter::RoadMapPath => html!{<RoadMap/>},
+                                                AppRouter::CommunityPath => html!{<Community/>},
+                                                AppRouter::PageNotFound(Permissive(None)) => html!{<h1>{"Page not found"}</h1>},
+                                                AppRouter::PageNotFound(Permissive(Some(missed_route))) => html!{<h1>{format!("Page '{}' not found", missed_route)}</h1>}
+                                            }
+                                        })
+                                        redirect = Router::redirect(|route: Route<()>| {
+                                            AppRouter::PageNotFound(Permissive(Some(route.route)))
+                                        })
+                                    />
+                                    </div>
+                                </Item>
                             </Container>
-                        </Item>
-                        <Item layouts=vec!(ItemLayout::ItXs(11)) align_self=AlignSelf::Center class_name="content">
-                            <div class="content-marging">
-                            <Router<AppRouter, ()>
-                                render = Router::render(|switch: AppRouter| {
-                                    match switch {
-                                        AppRouter::HomePath => html! {
-                                            <Home/>
-                                        },
-                                        AppRouter::InfoPath => html! {
-                                            <Info/>
-                                        },
-                                        AppRouter::UseCasesPath => html! {
-                                            <UseCases/>
-                                        },
-                                        AppRouter::BuyPath => html! {
-                                            <Buy/>
-                                        },
-                                        AppRouter::StakePath => html!{<Stake/>},
-                                        AppRouter::RoadMapPath => html!{<RoadMap/>},
-                                        AppRouter::CommunityPath => html!{<Community/>},
-                                        AppRouter::PageNotFound(Permissive(None)) => html!{<h1>{"Page not found"}</h1>},
-                                        AppRouter::PageNotFound(Permissive(Some(missed_route))) => html!{<h1>{format!("Page '{}' not found", missed_route)}</h1>}
-                                    }
-                                })
-                                redirect = Router::redirect(|route: Route<()>| {
-                                    AppRouter::PageNotFound(Permissive(Some(route.route)))
-                                })
-                            />
-                            </div>
-                        </Item>
-                    </Container>
-                </Carousel>
+                        </Carousel>
+                    </Item>
+                </Container>
             </div>
         }
     }

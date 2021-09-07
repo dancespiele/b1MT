@@ -2,7 +2,7 @@ use crate::config::Config;
 use crate::lang::Translations;
 use yew::prelude::*;
 use yew_styles::layouts::{
-    container::{AlignItems, Container, Direction, JustifyContent, Mode, Wrap},
+    container::{AlignContent, AlignItems, Container, Direction, JustifyContent, Mode, Wrap},
     item::{AlignSelf, Item, ItemLayout},
 };
 
@@ -33,7 +33,8 @@ impl Component for Home {
             <Container
                 direction=Direction::Row wrap=Wrap::Wrap
                 justify_content=JustifyContent::FlexStart(Mode::NoMode)
-                align_items=AlignItems::FlexEnd(Mode::NoMode)
+                align_items=AlignItems::FlexStart(Mode::NoMode)
+                align_content=AlignContent::FlexStart(Mode::NoMode)
                 id="home">
                 <Item layouts=vec!(ItemLayout::ItXs(4)) align_self=AlignSelf::Center>
                     <h2 class="slogan">{"Lorem Ipsum dolor sit amet"}</h2>
@@ -41,7 +42,7 @@ impl Component for Home {
                         {"Perfecto principes a Illud discere quo et, sea eu aperiam praesent. Nec ne prima rebum voluptatibus."}
                     </p>
                 </Item>
-                <Item layouts=vec!(ItemLayout::ItXs(8)) class_name="moon-target">
+                <Item layouts=vec!(ItemLayout::ItXs(8)) align_self=AlignSelf::FlexStart class_name="moon-target">
                     <img src="/moon_target.svg"/>
                 </Item>
 

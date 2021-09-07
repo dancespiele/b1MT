@@ -68,7 +68,7 @@ fn get_cards(descriptions: Vec<NodeRef>) -> Html {
         .map(|(i, c)| {
             let stake_title = c;
             html! {
-                <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(6)]>
+                <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(8)]>
                     <Container
                         direction=Direction::Row wrap=Wrap::Wrap
                         justify_content=JustifyContent::Center(Mode::NoMode)
@@ -78,7 +78,7 @@ fn get_cards(descriptions: Vec<NodeRef>) -> Html {
                                 <img class="kennel-image" src=icon_src[i] alt=stake_title.to_title_case()/>
                             </a>
                         </Item>
-                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(6), ItemLayout::ItL(7)]>
+                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(6), ItemLayout::ItL(8)]>
                             <Text
                                 class_name="kennel-title"
                                 text_type=TextType::Title(Header::H3)

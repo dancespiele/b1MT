@@ -7,11 +7,6 @@ pub enum ScrollStyle {
     ScrollDown,
 }
 
-pub enum ScrollbarState {
-    Auto,
-    Hidden,
-}
-
 pub fn set_scroll_style(scroll_style: ScrollStyle, id: &str, style: &str) {
     let screen_element = document()
         .get_element_by_id(id)
@@ -28,19 +23,5 @@ pub fn set_scroll_style(scroll_style: ScrollStyle, id: &str, style: &str) {
         ScrollStyle::ScrollDown => {
             screen_element.set_class_name(&format!("{} {}-down", screen_style, style));
         }
-    };
-}
-
-pub fn set_scrollbar_state(scrollbar_state: ScrollbarState) {
-    let body_style = document()
-        .body()
-        .unwrap()
-        .dyn_into::<HtmlElement>()
-        .unwrap()
-        .style();
-
-    match scrollbar_state {
-        ScrollbarState::Auto => body_style.set_property("overflow", "auto").unwrap(),
-        ScrollbarState::Hidden => body_style.set_property("overflow", "hidden").unwrap(),
     };
 }

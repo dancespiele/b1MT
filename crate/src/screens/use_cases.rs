@@ -53,8 +53,7 @@ impl Component for UseCases {
                 direction=Direction::Row wrap=Wrap::Wrap
                 justify_content=JustifyContent::Center(Mode::NoMode)
                 align_items=AlignItems::Center(Mode::NoMode)
-                id="use-cases"
-                class_name="use-cases">
+                id="use-cases">
                 {get_cards(self.lang.clone(), self.partner_description_ref.clone())}
             </Container>
         }

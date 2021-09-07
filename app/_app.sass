@@ -13,13 +13,17 @@
   animation-iteration-count: 1
   animation-fill-mode: forwards
 
-.carousel
-    height: 100%
-
 .root
   height: 100%
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(229, 229, 229, 0.1575) 8.51%, rgba(11, 10, 10, 0.1575) 24.03%, rgba(11, 10, 10, 0.45) 98.22%)
+  background: #FFF
   font-family: Kanit Regular
+
+.content-container
+  height: 100%
+
+.content-body
+  width: 100%
+  overflow-y: hidden
 
 html
   height: 100%
@@ -28,6 +32,13 @@ body
     padding: 0
     margin: 0
     height: 100%
+
+html, body
+    overflow-y: scroll
+    scrollbar-width: none
+
+body::-webkit-scrollbar
+  display: none
 
 .navbar
   display: none
@@ -38,15 +49,33 @@ body
   .content-marging
     padding-right: 24px
 
+.header
+  width: 100%
+
+.header-content
+  height: 100%
+
+.carousel
+  height: 100%
+
 .screen
   height: 100%
 
 .dots
   height: 100%
   display: flex
+  margin-top: 24%
 
   .carousel-dot
     padding-right: 10px
+
+    &.standard
+      svg
+        fill: none
+
+      &.active
+        svg
+          fill: #33D1DA
 
 .card
   .card-container
@@ -77,38 +106,38 @@ body
     margin-bottom: 0
 
 .logo-b1mt
-  position: absolute
-  top: 18px
-  left: 24px
-
+  height: 65px
   img
-    width: 100px
-
-.logo-1mt
-  position: absolute
-  top: 35px
-  right: 24px
-  z-index: 1
-  background: rgba(11, 10, 10, 0.45)
-  border-radius: 30px
-
-  img
-    width: 45px
+    height: 100%
+    padding-left: 45px
 
 .b1mt-market
-  position: absolute
-  top: 33px
-  width: 100%
-  font-size: 22px
+  font-size: 20px
   display: flex
+  line-height: 32px
   justify-content: center
-  letter-spacing: 0.1em
+  letter-spacing: 0.05em
 
   .b1mt-market-content
     text-align: left
 
 .split-bar
   margin: 0 20px
+
+.content-1mt
+  width: 100%
+  text-align: right
+
+.container-1mt
+  padding-right: 27px
+
+.logo-1mt
+  z-index: 1
+  background: #33D1DA
+  border-radius: 30px
+  width: fit-content
+  padding: 2px 0
+  text-align: right
 
 @media (max-width: 991px)
   .dots, .logo-1mt, .logo-b1mt
