@@ -52,7 +52,7 @@ impl Component for Home {
                     align_items=AlignItems::FlexEnd(Mode::NoMode)
                     class_name="home-description"
                 >
-                    <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(6))>
+                    <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(6)) align_self=AlignSelf::FlexStart>
                         <Container
                             direction=Direction::Row wrap=Wrap::Wrap
                             justify_content=JustifyContent::FlexEnd(Mode::NoMode)
@@ -66,7 +66,7 @@ impl Component for Home {
                             </Item>
                         </Container>
                     </Item>
-                    <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(6))>
+                    <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(6)) align_self=AlignSelf::FlexStart>
                         <Container
                             direction=Direction::Row wrap=Wrap::Wrap
                             justify_content=JustifyContent::FlexStart(Mode::NoMode)

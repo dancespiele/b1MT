@@ -1,7 +1,7 @@
 use yew::prelude::*;
 
 use yew_styles::layouts::{
-    container::{AlignItems, Container, Direction, JustifyContent, Mode, Wrap},
+    container::{AlignContent, AlignItems, Container, Direction, Mode, Wrap},
     item::{Item, ItemLayout},
 };
 
@@ -27,7 +27,7 @@ impl Component for Info {
         html! {
             <Container
                 direction=Direction::Column wrap=Wrap::Wrap
-                justify_content=JustifyContent::Center(Mode::NoMode)
+                align_content=AlignContent::Center(Mode::NoMode)
                 align_items=AlignItems::FlexStart(Mode::NoMode)
                 id="info">
                 {get_cards()}
@@ -57,7 +57,7 @@ fn get_cards() -> Html {
             });
 
             html! {
-                <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(4)]>
+                <Item layouts=vec![ItemLayout::ItL(4)]>
                     <div class=tokenomics_class>
                         <a href=u target="_blank">
                             <img src=icons_src[i] />

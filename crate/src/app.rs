@@ -269,7 +269,7 @@ impl Component for App {
                     align_content=AlignContent::FlexStart(Mode::NoMode)
                     class_name="content-container"
                 >
-                    <Item layouts=vec![ItemLayout::ItXs(1)] class_name="header">
+                    <Item layouts=vec![ItemLayout::ItXs(3), ItemLayout::ItL(2), ItemLayout::ItXl(1)] class_name="header">
                         <Container
                             direction=Direction::Row wrap=Wrap::Wrap
                             justify_content=JustifyContent::FlexStart(Mode::NoMode)
@@ -280,7 +280,7 @@ impl Component for App {
                             <Item layouts=vec![ItemLayout::ItXs(4)] align_self=AlignSelf::Center class_name="logo-b1mt">
                                 <img src="/1MTlite2.png"/>
                             </Item>
-                            <Item layouts=vec![ItemLayout::ItXs(4)] align_self=AlignSelf::Center class_name="b1mt-market">
+                            <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(4)] align_self=AlignSelf::Center class_name="b1mt-market">
                                 <div class="b1mt-market-content">
                                     <div><span>{format!("Price: {}$", self.token_info.market_data.current_price.usd)}</span><span class="split-bar">{"|"}</span><span>{format!("{}€", self.token_info.market_data.current_price.eur)}</span></div>
                                     <div><span>{format!("Market cap: {}$", self.token_info.market_data.market_cap.usd)}</span><span class="split-bar">{"|"}</span><span>{format!("{}€", self.token_info.market_data.market_cap.eur)}</span></div>
@@ -292,16 +292,14 @@ impl Component for App {
                                     justify_content=JustifyContent::FlexEnd(Mode::NoMode)
                                     class_name="container-1mt"
                                 >
-                                <Item layouts=vec![ItemLayout::ItXs(4)]>
                                     <div class="logo-1mt">
                                         <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.png"/><span>{"1MT ETH"}</span></a>
                                     </div>
-                                </Item>
                                 </Container>
                             </Item>
                         </Container>
                     </Item>
-                    <Item layouts=vec![ItemLayout::ItXs(11)] class_name="content-body">
+                    <Item layouts=vec![ItemLayout::ItXs(9), ItemLayout::ItL(10), ItemLayout::ItXl(11)] class_name="content-body">
                         <Carousel class_name="carousel" id="screen" onwheel_signal= self.link.callback(Msg::ScrollMenu)>
                             <Container direction=Direction::Row wrap=Wrap::Wrap class_name=format!("screen {}", {
                                 let screen = get_param();

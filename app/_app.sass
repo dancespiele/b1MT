@@ -46,9 +46,6 @@ body::-webkit-scrollbar
 .content
   width: 100%
 
-  .content-marging
-    padding-right: 24px
-
 .header
   width: 100%
 
@@ -105,6 +102,9 @@ body::-webkit-scrollbar
   &:last-of-type
     margin-bottom: 0
 
+  .use-cases-dot
+    margin-left: -4px
+
 .logo-b1mt
   height: 65px
   img
@@ -135,9 +135,17 @@ body::-webkit-scrollbar
   z-index: 1
   background: #33D1DA
   border-radius: 30px
-  width: fit-content
   padding: 2px 0
   text-align: right
+  width: 200px
+
+@media (max-width: 1680px)
+  .dots
+    margin-top: 10%
+
+  .carousel-dot
+    margin-bottom: 20px
+    margin-top: 34px
 
 @media (max-width: 991px)
   .dots, .logo-1mt, .logo-b1mt
@@ -145,6 +153,13 @@ body::-webkit-scrollbar
 
   .b1mt-market
     top: 50px
+
+  .content-body
+    overflow-y: scroll
+    scrollbar-width: none
+
+    &::-webkit-scrollbar
+      display: none
 
 #home, #buy, #info, #roadmap, #use-cases, #stake
   &.scroll-down

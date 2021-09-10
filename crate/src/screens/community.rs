@@ -52,7 +52,7 @@ impl Component for Community {
 }
 
 fn get_cards(lang: Translations) -> Html {
-    let tooltip_titles = vec!["Twitter", "Telegram", "Discord", "Medium", &lang.governance];
+    let tooltip_titles = vec!["Twitter", "Telegram", &lang.governance, "Medium", "Discord"];
     let social_url = vec![
         "https://twitter.com/1MillionBsc",
         "https://t.me/MillionToken",

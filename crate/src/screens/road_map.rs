@@ -1,6 +1,6 @@
-use web_sys::Element;
+use wasm_bindgen::JsCast;
+use web_sys::HtmlElement;
 use yew::prelude::*;
-use yew::services::ConsoleService;
 use yew::utils::document;
 use yew_styles::layouts::{
     container::{Container, Direction, JustifyContent, Mode, Wrap},
@@ -12,7 +12,7 @@ pub struct RoadMap {
     top: i32,
     x: i32,
     y: i32,
-    element: Option<Element>,
+    element: Option<HtmlElement>,
     is_dragging: bool,
     link: ComponentLink<Self>,
 }
@@ -20,6 +20,7 @@ pub struct RoadMap {
 pub enum Msg {
     MouseMoveHandler(MouseEvent),
     MouseUpHandler,
+    MouseOverHandler,
     MouseDownHandler(MouseEvent),
 }
 
@@ -51,9 +52,22 @@ impl Component for RoadMap {
                     }
                 }
             }
+            Msg::MouseOverHandler => {
+                if let Some(element) = self.element.clone() {
+                    let element_style = element.style();
+                    element_style.set_property("cursor", "grab").unwrap();
+                    element_style.remove_property("user-select").unwrap();
+                }
+            }
             Msg::MouseUpHandler => {
                 self.is_dragging = false;
+                if let Some(element) = self.element.clone() {
+                    let element_style = element.style();
+                    element_style.set_property("cursor", "grab").unwrap();
+                    element_style.remove_property("user-select").unwrap();
+                }
             }
+
             Msg::MouseDownHandler(event) => {
                 event.prevent_default();
                 if let Some(element) = self.element.clone() {
@@ -62,6 +76,9 @@ impl Component for RoadMap {
                     self.top = element.scroll_top();
                     self.x = event.client_x();
                     self.y = event.client_y();
+                    let element_style = element.style();
+                    element_style.set_property("cursor", "grabbing").unwrap();
+                    element_style.set_property("user-select", "none").unwrap();
                 }
             }
         }
@@ -74,7 +91,11 @@ impl Component for RoadMap {
 
     fn rendered(&mut self, first_render: bool) {
         if first_render {
-            let scrollgrab_element = document().get_element_by_id("scrollgrab").unwrap();
+            let scrollgrab_element = document()
+                .get_element_by_id("scrollgrab")
+                .unwrap()
+                .dyn_into::<HtmlElement>()
+                .unwrap();
 
             self.element = Some(scrollgrab_element.clone());
             self.left = 500;
@@ -90,6 +111,7 @@ impl Component for RoadMap {
                         onmouseup=self.link.callback(|_| Msg::MouseUpHandler)
                         onmousemove=self.link.callback(Msg::MouseMoveHandler)
                         onmousedown=self.link.callback(Msg::MouseDownHandler)
+                        onmouseover=self.link.callback(|_| Msg::MouseOverHandler)
                         id="scrollgrab"
                         class="scrollgrab"
                 >

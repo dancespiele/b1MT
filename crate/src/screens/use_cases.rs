@@ -52,7 +52,7 @@ impl Component for UseCases {
             <Container
                 direction=Direction::Row wrap=Wrap::Wrap
                 justify_content=JustifyContent::Center(Mode::NoMode)
-                align_items=AlignItems::Center(Mode::NoMode)
+                align_items=AlignItems::FlexEnd(Mode::NoMode)
                 id="use-cases">
                 {get_cards(self.lang.clone(), self.partner_description_ref.clone())}
             </Container>
@@ -71,7 +71,7 @@ fn get_cards(lang: Translations, partner_description_ref: NodeRef) -> Html {
         .map(|(i, c)| {
             let cards_title = c;
             html! {
-                <Item layouts=vec![ItemLayout::ItXs(12)] class_name="use-cases-content" align_self=AlignSelf::FlexStart>
+                <Item layouts=vec![ItemLayout::ItXs(12)] class_name="use-cases-content" align_self=AlignSelf::FlexEnd>
                     <Container
                         direction=Direction::Row wrap=Wrap::Wrap
                         justify_content=JustifyContent::Center(Mode::NoMode)
@@ -79,7 +79,7 @@ fn get_cards(lang: Translations, partner_description_ref: NodeRef) -> Html {
                         <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(1)] align_self=AlignSelf::FlexStart>
                             <img class="use-cases-image" src=card_src[i] alt=cards_title.to_title_case()/>
                         </Item>
-                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(4)]>
+                        <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(6), ItemLayout::ItXl(4)]>
                             <Text
                                 text_type=TextType::Title(Header::H2)
                                 plain_text=c.to_string()
