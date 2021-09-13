@@ -22,6 +22,8 @@ pub enum Msg {
     MouseUpHandler,
     MouseOverHandler,
     MouseDownHandler(MouseEvent),
+    TouchStartHandle(TouchEvent),
+    TouchMoveHandle(TouchEvent),
 }
 
 impl Component for RoadMap {
@@ -81,6 +83,29 @@ impl Component for RoadMap {
                     element_style.set_property("user-select", "none").unwrap();
                 }
             }
+            Msg::TouchStartHandle(event) => {
+                event.prevent_default();
+                if let Some(element) = self.element.clone() {
+                    self.is_dragging = true;
+                    self.left = element.scroll_left();
+                    self.top = element.scroll_top();
+                    self.x = event.layer_x();
+                    self.y = event.layer_y();
+                    let element_style = element.style();
+                    element_style.set_property("cursor", "grabbing").unwrap();
+                    element_style.set_property("user-select", "none").unwrap();
+                }
+            }
+            Msg::TouchMoveHandle(event) => {
+                if let Some(element) = self.element.clone() {
+                    if self.is_dragging {
+                        let dx = event.layer_x() - self.x;
+                        let dy = event.layer_y() - self.y;
+                        element.set_scroll_top(self.top - dy);
+                        element.set_scroll_left(self.left - dx);
+                    }
+                }
+            }
         }
         true
     }
@@ -110,11 +135,16 @@ impl Component for RoadMap {
                     <div
                         onmouseup=self.link.callback(|_| Msg::MouseUpHandler)
                         onmousemove=self.link.callback(Msg::MouseMoveHandler)
+                        ontouchmove=self.link.callback(Msg::TouchMoveHandle)
                         onmousedown=self.link.callback(Msg::MouseDownHandler)
+                        ontouchstart=self.link.callback(Msg::TouchStartHandle)
                         onmouseover=self.link.callback(|_| Msg::MouseOverHandler)
                         id="scrollgrab"
                         class="scrollgrab"
-                >
+                    >
+                        <img src="/roadmap.svg" alt="roadmap"/>
+                    </div>
+                    <div class="scrollgrab-mobile">
                         <img src="/roadmap.svg" alt="roadmap"/>
                     </div>
                 </Item>

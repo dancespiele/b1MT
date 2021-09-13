@@ -37,13 +37,13 @@ impl Component for Home {
                 align_content=AlignContent::FlexStart(Mode::NoMode)
                 id="home">
                 <Item layouts=vec!(ItemLayout::ItXs(4)) align_self=AlignSelf::Center>
-                    <h2 class="slogan">{"Lorem Ipsum dolor sit amet"}</h2>
+                    <h2 class="slogan">{self.lang.slogan.clone()}</h2>
                     <p class="slogan-description">
-                        {"Perfecto principes a Illud discere quo et, sea eu aperiam praesent. Nec ne prima rebum voluptatibus."}
+                        {self.lang.slogan_description.clone()}
                     </p>
                 </Item>
                 <Item layouts=vec!(ItemLayout::ItXs(8)) align_self=AlignSelf::FlexStart class_name="moon-target">
-                    <img src="/moon_target.svg"/>
+                    <img src="/moon_target.png"/>
                 </Item>
 
                 <Container

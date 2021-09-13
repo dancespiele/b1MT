@@ -312,7 +312,7 @@ impl Component for App {
                             }) justify_content=JustifyContent::FlexStart(Mode::NoMode)
                                 align_content=AlignContent::FlexStart(Mode::NoMode)
                             >
-                                <Item layouts=vec!(ItemLayout::ItXs(1)) align_self=AlignSelf::FlexStart class_name="content">
+                                <Item layouts=vec!(ItemLayout::ItXs(1)) align_self=AlignSelf::FlexStart class_name="content carousel-items">
                                     <Container
                                         direction=Direction::Column wrap=Wrap::Wrap
                                         justify_content=JustifyContent::FlexStart(Mode::NoMode)

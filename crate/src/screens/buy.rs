@@ -1,7 +1,7 @@
 use inflector::Inflector;
 use yew::prelude::*;
 use yew_styles::layouts::{
-    container::{AlignItems, Container, Direction, JustifyContent, Mode, Wrap},
+    container::{AlignContent, AlignItems, Container, Direction, JustifyContent, Mode, Wrap},
     item::{Item, ItemLayout},
 };
 use yew_styles::styles::Position;
@@ -29,10 +29,19 @@ impl Component for Buy {
         html! {
             <Container
                 direction=Direction::Row wrap=Wrap::Wrap
-                justify_content=JustifyContent::FlexStart(Mode::NoMode)
+                justify_content=JustifyContent::Center(Mode::NoMode)
                 align_items=AlignItems::FlexStart(Mode::NoMode)
+                align_content=AlignContent::Center(Mode::NoMode)
                 id="buy">
-                {get_cards()}
+                <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(4)]>
+                <Container
+                    direction=Direction::Row wrap=Wrap::Wrap
+                    justify_content=JustifyContent::FlexStart(Mode::NoMode)
+                    align_items=AlignItems::Center(Mode::NoMode)
+                >
+                    {get_cards()}
+                </Container>
+                </Item>
             </Container>
         }
     }

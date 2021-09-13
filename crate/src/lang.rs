@@ -23,6 +23,8 @@ pub struct Translations {
     pub partner_with_1mt_description: String,
     pub vegas_casino_description: String,
     pub the_kennel_token_description: String,
+    pub slogan: String,
+    pub slogan_description: String,
 }
 
 #[derive(Deserialize)]
