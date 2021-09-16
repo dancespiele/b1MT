@@ -13,6 +13,7 @@ use yew_styles::text::{Header, Text, TextType};
 pub struct Stake {
     lang: Translations,
     kennel_description_ref: NodeRef,
+    moneytime_description_ref: NodeRef,
 }
 
 impl Component for Stake {
@@ -23,6 +24,7 @@ impl Component for Stake {
         Self {
             lang: Config::get_lang(),
             kennel_description_ref: NodeRef::default(),
+            moneytime_description_ref: NodeRef::default(),
         }
     }
 
@@ -37,9 +39,14 @@ impl Component for Stake {
     fn rendered(&mut self, first_render: bool) {
         if first_render {
             let kennel_description_lang = self.lang.the_kennel_token_description.clone();
+            let moneytime_description_lang = self.lang.moneytime.clone();
 
             if let Some(description) = self.kennel_description_ref.cast::<HtmlElement>() {
                 description.set_inner_html(&kennel_description_lang);
+            }
+
+            if let Some(description) = self.moneytime_description_ref.cast::<HtmlElement>() {
+                description.set_inner_html(&moneytime_description_lang);
             }
         }
     }
@@ -51,16 +58,19 @@ impl Component for Stake {
                 justify_content=JustifyContent::Center(Mode::NoMode)
                 align_items=AlignItems::Center(Mode::NoMode)
                 id="stake">
-                {get_cards(vec![self.kennel_description_ref.clone()])}
+                {get_cards(vec![self.moneytime_description_ref.clone() ,self.kennel_description_ref.clone()])}
             </Container>
         }
     }
 }
 
 fn get_cards(descriptions: Vec<NodeRef>) -> Html {
-    let stake_titles = vec!["The Token Kennel"];
-    let pools_url = vec!["https://thetokenkennel.com/boarding/#/"];
-    let icon_src = vec!["/token_kennel.svg"];
+    let stake_titles = vec!["Money Time", "The Token Kennel"];
+    let pools_url = vec![
+        "https://moneytime.finance/",
+        "https://thetokenkennel.com/boarding/#/",
+    ];
+    let icon_src = vec!["/hero.svg", "/token_kennel.svg"];
 
     stake_titles
         .into_iter()

@@ -1,10 +1,9 @@
 use crate::lang::{Lang, Translations};
-use web_sys::window;
-use wasm_bindgen::{JsCast, JsValue};
 use js_sys::{global, Array, Object};
+use wasm_bindgen::{JsCast, JsValue};
+use web_sys::window;
 
-pub struct Config {
-}
+pub struct Config {}
 
 impl Config {
     fn get_global(global_name: &str) -> JsValue {
@@ -19,7 +18,7 @@ impl Config {
         global_field.get(1)
     }
 
-    fn get_browser_lang() -> String {
+    pub fn get_browser_lang() -> String {
         if let Some(language) = window().unwrap().navigator().language() {
             language
         } else {

@@ -25,6 +25,7 @@ pub struct Translations {
     pub the_kennel_token_description: String,
     pub slogan: String,
     pub slogan_description: String,
+    pub moneytime: String,
 }
 
 #[derive(Deserialize)]

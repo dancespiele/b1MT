@@ -1,3 +1,4 @@
+use crate::config::Config;
 use wasm_bindgen::JsCast;
 use web_sys::HtmlElement;
 use yew::prelude::*;
@@ -15,6 +16,7 @@ pub struct RoadMap {
     element: Option<HtmlElement>,
     is_dragging: bool,
     link: ComponentLink<Self>,
+    browser_lang: String,
 }
 
 pub enum Msg {
@@ -39,6 +41,7 @@ impl Component for RoadMap {
             element: None,
             is_dragging: false,
             link,
+            browser_lang: Config::get_browser_lang(),
         }
     }
 
@@ -129,6 +132,12 @@ impl Component for RoadMap {
     }
 
     fn view(&self) -> Html {
+        let roadmap = if self.browser_lang.starts_with("es") {
+            "/roadmap_es.svg"
+        } else {
+            "/roadmap.svg"
+        };
+
         html! {
             <Container direction=Direction::Row wrap=Wrap::Wrap justify_content=JustifyContent::Center(Mode::NoMode) id="roadmap">
                 <Item layouts=vec![ItemLayout::ItXs(8)]>
@@ -142,10 +151,10 @@ impl Component for RoadMap {
                         id="scrollgrab"
                         class="scrollgrab"
                     >
-                        <img src="/roadmap.svg" alt="roadmap"/>
+                        <img src=roadmap alt="roadmap"/>
                     </div>
                     <div class="scrollgrab-mobile">
-                        <img src="/roadmap.svg" alt="roadmap"/>
+                        <img src=roadmap alt="roadmap"/>
                     </div>
                 </Item>
             </Container>
