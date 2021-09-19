@@ -282,8 +282,8 @@ impl Component for App {
                             </Item>
                             <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(4)] align_self=AlignSelf::Center class_name="b1mt-market">
                                 <div class="b1mt-market-content">
-                                    <div><span>{format!("Price: {}$", self.token_info.market_data.current_price.usd)}</span><span class="split-bar">{"|"}</span><span>{format!("{}€", self.token_info.market_data.current_price.eur)}</span></div>
-                                    <div><span>{format!("Market cap: {}$", self.token_info.market_data.market_cap.usd)}</span><span class="split-bar">{"|"}</span><span>{format!("{}€", self.token_info.market_data.market_cap.eur)}</span></div>
+                                    <div><span>{format!("{}: {}$", self.lang.price, self.token_info.market_data.current_price.usd)}</span><span class="split-bar">{"|"}</span><span>{format!("{}€", self.token_info.market_data.current_price.eur)}</span></div>
+                                    <div><span>{format!("{}: {}$", self.lang.market_cap, self.token_info.market_data.market_cap.usd)}</span><span class="split-bar">{"|"}</span><span>{format!("{}€", self.token_info.market_data.market_cap.eur)}</span></div>
                                 </div>
                             </Item>
                             <Item layouts=vec![ItemLayout::ItXs(4)] align_self=AlignSelf::Center class_name="content-1mt">

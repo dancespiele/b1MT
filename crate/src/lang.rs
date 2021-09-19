@@ -7,6 +7,8 @@ pub struct Translations {
     pub stake: String,
     pub road_map: String,
     pub community: String,
+    pub price: String,
+    pub market_cap: String,
     pub description: String,
     pub community_project: String,
     pub contract: String,
