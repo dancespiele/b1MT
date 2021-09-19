@@ -24,9 +24,7 @@
 
 
 .right-line
-  border-right: 2px solid rgba(38, 169, 183, 0.2)
-  padding-right: 80px
-  margin-right: 70px
+  border-right: 2px solid #0A3639
 
 .slogan
   font-size: 76px
@@ -48,7 +46,7 @@
 .moon-target
   margin-bottom: 34%
   img
-    top: 0px
+    top: 50px
     position: absolute
     height: 80%
     right: 0
@@ -69,15 +67,24 @@
     width: 100px
 
   .moon-target
-    margin-bottom: 32%
+    margin-bottom: 36%
+
+    img
+      height: 70%
 
   .right-line
-    border-right: 2px solid rgba(38, 169, 183, 0.2)
     padding-right: 0
     margin-right: 0
 
   .home-parragraph
     font-size: 16px
+
+@media (max-width: 1366px) and (max-height: 690px)
+    .moon-target
+      margin-bottom: 25%
+
+      img
+        height: 70%
 
 @media (max-width: 991px)
   .home

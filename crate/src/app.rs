@@ -265,11 +265,11 @@ impl Component for App {
                 <Container
                     direction=Direction::Column wrap=Wrap::Wrap
                     justify_content=JustifyContent::FlexStart(Mode::NoMode)
-                    align_items=AlignItems::FlexStart(Mode::NoMode)
-                    align_content=AlignContent::FlexStart(Mode::NoMode)
+                    align_items=AlignItems::Start(Mode::NoMode)
+                    align_content=AlignContent::Start(Mode::NoMode)
                     class_name="content-container"
                 >
-                    <Item layouts=vec![ItemLayout::ItXs(3), ItemLayout::ItL(2), ItemLayout::ItXl(1)] class_name="header">
+                    <div class="header">
                         <Container
                             direction=Direction::Row wrap=Wrap::Wrap
                             justify_content=JustifyContent::FlexStart(Mode::NoMode)
@@ -298,8 +298,8 @@ impl Component for App {
                                 </Container>
                             </Item>
                         </Container>
-                    </Item>
-                    <Item layouts=vec![ItemLayout::ItXs(9), ItemLayout::ItL(10), ItemLayout::ItXl(11)] class_name="content-body">
+                    </div>
+                    <Item layouts=vec![ItemLayout::ItXs(12)] class_name="content-body" align_self=AlignSelf::FlexEnd>
                         <Carousel class_name="carousel" id="screen" onwheel_signal= self.link.callback(Msg::ScrollMenu)>
                             <Container direction=Direction::Row wrap=Wrap::Wrap class_name=format!("screen {}", {
                                 let screen = get_param();
@@ -322,7 +322,7 @@ impl Component for App {
                                         {get_dots(self.navbar_items.to_vec(), self.link.clone(), self.lang.clone())}
                                     </Container>
                                 </Item>
-                                <Item layouts=vec!(ItemLayout::ItXs(11)) align_self=AlignSelf::Center class_name="content">
+                                <Item layouts=vec!(ItemLayout::ItXs(11)) align_self=AlignSelf::Center class_name="content content-screen">
                                     <div class="content-marging">
                                     <Router<AppRouter, ()>
                                         render = Router::render(|switch: AppRouter| {

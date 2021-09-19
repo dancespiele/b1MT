@@ -2,26 +2,32 @@
   background: radial-gradient(39.17% 82.16% at 94.64% 7.91%, #1B8F97 23.98%, rgba(27, 143, 151, 0) 70.93%), linear-gradient(60.42deg, #1B8F97 0.75%, rgba(27, 143, 151, 0) 17.05%), radial-gradient(34.9% 71.45% at 2.03% 100%, #1B8F97 22.88%, rgba(27, 143, 151, 0) 68.08%), radial-gradient(48.96% 100.87% at -26.51% -72.86%, #1B8F97 19.18%, rgba(27, 143, 151, 0) 100%), radial-gradient(46.64% 91.89% at 3.07% 62.18%, #1B8F97 0%, rgba(27, 143, 151, 0) 100%), radial-gradient(31.29% 62.82% at 59.64% -23.72%, #1B8F97 0%, rgba(27, 143, 151, 0) 83.37%), radial-gradient(46.67% 96.14% at 8.18% 124.46%, #1B8F97 15.66%, rgba(27, 143, 151, 0) 68.08%), radial-gradient(40.63% 101.07% at 98.39% 97.65%, #1B8F97 27.35%, rgba(27, 143, 151, 0) 100%), radial-gradient(38.39% 117.37% at 0% 34.12%, #1B8F97 0%, rgba(27, 143, 151, 0) 100%), radial-gradient(31.29% 62.82% at 59.64% -23.72%, #1B8F97 0%, rgba(27, 143, 151, 0) 83.37%), radial-gradient(46.67% 96.14% at 8.18% 124.46%, #1B8F97 15.66%, rgba(27, 143, 151, 0) 68.08%), radial-gradient(40.63% 101.07% at 98.39% 97.65%, #1B8F97 27.35%, rgba(27, 143, 151, 0) 100%), radial-gradient(38.39% 117.37% at 0% 34.12%, #1B8F97 0%, rgba(27, 143, 151, 0) 100%), linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), radial-gradient(31.2% 57.5% at 68.8% 28.42%, rgba(10, 54, 57, 0.2) 0%, rgba(18, 99, 104, 0.1) 100%), conic-gradient(from 189.84deg at 36.51% 119.44%, rgba(17, 93, 98, 0.44) -98.74deg, #0A3639 84.63deg, rgba(17, 93, 98, 0.44) 261.26deg, #0A3639 444.63deg)
   background-blend-mode: multiply
 
-  .content
-    align-self: end !important
+  .content-screen
+    align-self: flex-end !important
 
-.kennel-image
+.stake-content
+  &:first-of-type
+    margin-top: 60px
+    margin-bottom: 60px
+
+.stake-image
   height: 200px
   margin-right: 50px
   margin-top: 18px
 
-.kennel-title, .kennel-description
+.stake-title, .stake-description
   text-align: left
   color: #FFF
+  font-family: Kanit Regular
 
-.kennel-title
+.stake-title
   font-size: 39px
   line-height: 58px
   font-weight: 500
   letter-spacing: 0.02em
   margin: 0 0 15px
 
-.kennel-description
+.stake-description
   p
     font-size: 24px
     font-weight: 300
@@ -30,24 +36,26 @@
   a
     color: #FFF
 
+
+
 @media (max-width: 991px)
   .stake
     background: #FFFFFF
 
-  .kennel-title, .kennel-description
+  .stake-title, .stake-description
     color: inherit
 
     a
       color: inherit
 
 @media (max-width: 1680px)
-  .kennel-title
+  .stake-title
     font-size: 26px
 
-  .kennel-description
+  .stake-description
     p
       font-size: 16px
       line-height: 20px
 
-  .kennel-image
+  .stake-image
     height: 120px

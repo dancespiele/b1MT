@@ -4,7 +4,7 @@ use inflector::Inflector;
 use web_sys::HtmlElement;
 use yew::prelude::*;
 use yew_styles::layouts::{
-    container::{AlignItems, Container, Direction, JustifyContent, Mode, Wrap},
+    container::{AlignContent, AlignItems, Container, Direction, JustifyContent, Mode, Wrap},
     item::{AlignSelf, Item, ItemLayout},
 };
 use yew_styles::styles::Size;
@@ -56,7 +56,8 @@ impl Component for Stake {
             <Container
                 direction=Direction::Row wrap=Wrap::Wrap
                 justify_content=JustifyContent::Center(Mode::NoMode)
-                align_items=AlignItems::Center(Mode::NoMode)
+                align_items=AlignItems::End(Mode::NoMode)
+                align_content=AlignContent::FlexEnd(Mode::NoMode)
                 id="stake">
                 {get_cards(vec![self.moneytime_description_ref.clone() ,self.kennel_description_ref.clone()])}
             </Container>
@@ -78,24 +79,24 @@ fn get_cards(descriptions: Vec<NodeRef>) -> Html {
         .map(|(i, c)| {
             let stake_title = c;
             html! {
-                <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(10), ItemLayout::ItXl(8)]>
+                <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(10), ItemLayout::ItXl(8)] class_name="stake-content">
                     <Container
                         direction=Direction::Row wrap=Wrap::Wrap
                         justify_content=JustifyContent::Center(Mode::NoMode)
                         align_items=AlignItems::Center(Mode::NoMode)>
                         <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItM(3), ItemLayout::ItL(2)] align_self=AlignSelf::FlexStart>
                             <a href=pools_url[i] target="_blank">
-                                <img class="kennel-image" src=icon_src[i] alt=stake_title.to_title_case()/>
+                                <img class="stake-image" src=icon_src[i] alt=stake_title.to_title_case()/>
                             </a>
                         </Item>
                         <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(8), ItemLayout::ItXl(8)]>
                             <Text
-                                class_name="kennel-title"
+                                class_name="stake-title"
                                 text_type=TextType::Title(Header::H3)
                                 plain_text=c.to_string()
                             />
                             <Text
-                                class_name="kennel-description"
+                                class_name="stake-description"
                                 text_type=TextType::Plain
                                 text_size=Size::Medium
                                 html_text=html!{

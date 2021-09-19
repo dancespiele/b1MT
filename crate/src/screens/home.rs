@@ -55,11 +55,11 @@ impl Component for Home {
                     <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(6)) align_self=AlignSelf::FlexStart>
                         <Container
                             direction=Direction::Row wrap=Wrap::Wrap
-                            justify_content=JustifyContent::FlexEnd(Mode::NoMode)
+                            justify_content=JustifyContent::Center(Mode::NoMode)
                             class_name="right-line"
                         >
                             <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(4))>
-                                <img class="logo-main-page" src="/b1mt2.png" />
+                                <img class="logo-main-page" src="/b1mt.svg" />
                             </Item>
                             <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(7)) align_self=AlignSelf::FlexStart class_name="home-parragraph">
                                 <p>{self.lang.description.clone()}</p>
@@ -69,7 +69,7 @@ impl Component for Home {
                     <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(6)) align_self=AlignSelf::FlexStart>
                         <Container
                             direction=Direction::Row wrap=Wrap::Wrap
-                            justify_content=JustifyContent::FlexStart(Mode::NoMode)
+                            justify_content=JustifyContent::Center(Mode::NoMode)
                         >
                             <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(4))>
                                 <img class="logo-main-page" src="/P1MTMoon2b.png" />

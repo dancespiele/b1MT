@@ -61,9 +61,9 @@ impl Component for UseCases {
 }
 
 fn get_cards(lang: Translations, partner_description_ref: NodeRef) -> Html {
-    let cards_title = vec!["1MT Vegas Casino", &lang.partner_with_1mt];
+    let cards_title = vec![&lang.partner_with_1mt];
 
-    let card_src = vec!["/vc1mt.svg", "/b1mt.svg"];
+    let card_src = vec!["/b1mt.svg"];
 
     cards_title
         .into_iter()
@@ -90,7 +90,7 @@ fn get_cards(lang: Translations, partner_description_ref: NodeRef) -> Html {
                                 text_size=Size::Medium
                                 class_name="use-cases-description"
                                 html_text=html!{
-                                    if c == lang.partner_with_1mt {
+                                    if c == &lang.partner_with_1mt {
                                         html!{
                                             <p ref=partner_description_ref.clone()></p>
                                         }
