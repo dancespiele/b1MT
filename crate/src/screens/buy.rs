@@ -60,15 +60,15 @@ fn get_cards() -> Html {
         .enumerate()
         .map(|(i, c)| {
             let swap_title = c;
-            let tokenomics_class = classes!(if i == swaps_url.len() - 1 {
+            let buy_class = classes!(if i == swaps_url.len() - 1 {
                 "content-last-icon"
             } else {
                 "content-icon"
             });
 
             html! {
-                <Item layouts=vec![ItemLayout::ItXs(12), ItemLayout::ItL(12)]>
-                    <div class=tokenomics_class>
+                <Item layouts=vec![ItemLayout::ItXs(12)]>
+                    <div class=buy_class>
                         <Tooltip
                             content=html!{<span>{swap_title}</span>}
                             tooltip_position=Position::Below
