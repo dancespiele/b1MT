@@ -66,6 +66,9 @@ body::-webkit-scrollbar
   height: 100%
   padding-top: 5%
 
+.plain-text
+  font-family: Kanit Regular
+
 .dots
   height: 100%
   display: flex
@@ -90,7 +93,7 @@ body::-webkit-scrollbar
   margin: 20px 40px
 
 .marketing
-  padding: 0 30px
+  padding: 0 22px
   text-decoration: none
   font-size: 24px
 
@@ -135,17 +138,33 @@ body::-webkit-scrollbar
 .content-1mt
   width: 100%
   text-align: right
+  padding: 10px 0
 
 .container-1mt
   padding-right: 27px
 
 .logo-1mt
   z-index: 1
-  background: #33D1DA
-  border-radius: 30px
-  padding: 2px 0
+  padding-top: 6px
   text-align: right
   width: 200px
+
+.logo-swap
+  z-index: 1
+  background: linear-gradient(180deg, rgba(215, 223, 113, 0.2) 16.67%, #D7DF71 82.29%)
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.45), 0px 6px 6px rgba(215, 223, 113, 0.5)
+  border: 2px solid #D7DF71
+  border-radius: 30px
+  padding: 4px 0
+  text-align: right
+  margin-left: 30px
+  width: 200px
+
+  img
+    height: 32px
+
+  span
+    color: #0A3639
 
 @media (max-width: 1680px)
   .dots
@@ -161,6 +180,9 @@ body::-webkit-scrollbar
 
   .b1mt-market
     top: 50px
+
+  .logo-swap
+    display: none
 
   .screen
     padding-top: 100px

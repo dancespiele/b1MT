@@ -1,7 +1,7 @@
 use crate::config::Config;
 use crate::lang::Translations;
 use crate::screens::get_dots_icons;
-use crate::screens::{Buy, Community, Home, Info, RoadMap, Stake, UseCases};
+use crate::screens::{Community, Home, Info, RoadMap, Stake, UseCases};
 use crate::store::{RequestCoingecko, TokenInfo, TokenInfoStore};
 use crate::utils::{set_scroll_style, ScrollStyle};
 use gloo::timers::callback::{Interval, Timeout};
@@ -53,8 +53,6 @@ pub enum AppRouter {
     InfoPath,
     #[to = "/use-cases"]
     UseCasesPath,
-    #[to = "/buy!"]
-    BuyPath,
     #[to = "/stake"]
     StakePath,
     #[to = "/roadmap"]
@@ -74,7 +72,7 @@ pub enum Msg {
     ScreenDown(usize, usize),
     ScrollMenu(WheelEvent),
     UpdateRoute(Route<()>),
-    TokenInfoMsg(ReadOnly<TokenInfoStore>),
+    TokenInfo(ReadOnly<TokenInfoStore>),
 }
 
 impl Component for App {
@@ -85,11 +83,11 @@ impl Component for App {
         let route = Route::from("/".to_string());
         let callback_route = link.callback(Msg::UpdateRoute);
         let route_agent = RouteAgent::bridge(callback_route);
-        let token_info_callback = link.callback(Msg::TokenInfoMsg);
+        let token_info_callback = link.callback(Msg::TokenInfo);
         let token_info_store = TokenInfoStore::bridge(token_info_callback);
 
         App {
-            navbar_items: vec![true, false, false, false, false, false, false],
+            navbar_items: vec![true, false, false, false, false, false],
             link,
             close_navbar_mobile: false,
             lang: Config::get_lang(),
@@ -102,7 +100,7 @@ impl Component for App {
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Msg::TokenInfoMsg(state) => {
+            Msg::TokenInfo(state) => {
                 if let Some(token_info) = &state.borrow().token_info {
                     self.token_info = token_info.clone();
                 }
@@ -293,7 +291,10 @@ impl Component for App {
                                     class_name="container-1mt"
                                 >
                                     <div class="logo-1mt">
-                                        <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.png"/><span>{"1MT ETH"}</span></a>
+                                        <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.svg"/><span>{"1MT ETH"}</span></a>
+                                    </div>
+                                    <div class="logo-swap">
+                                        <a class=classes!("marketing") href="https://swap.b1mt.network/" target="_blank"><img src="/buy.svg"/><span>{"Buy b1MT"}</span></a>
                                     </div>
                                 </Container>
                             </Item>
@@ -336,9 +337,6 @@ impl Component for App {
                                                 AppRouter::UseCasesPath => html! {
                                                     <UseCases/>
                                                 },
-                                                AppRouter::BuyPath => html! {
-                                                    <Buy/>
-                                                },
                                                 AppRouter::StakePath => html!{<Stake/>},
                                                 AppRouter::RoadMapPath => html!{<RoadMap/>},
                                                 AppRouter::CommunityPath => html!{<Community/>},
@@ -366,7 +364,6 @@ fn get_navbar(items: Vec<bool>, lang: Translations, link: ComponentLink<App>) ->
         lang.home,
         lang.tokenomics,
         lang.use_cases,
-        lang.buy,
         lang.stake,
         lang.road_map,
         lang.community,
@@ -407,10 +404,9 @@ fn get_route(index: usize) -> String {
         0 => String::from("/"),
         1 => String::from("/info"),
         2 => String::from("/use-cases"),
-        3 => String::from("/buy"),
-        4 => String::from("/stake"),
-        5 => String::from("/roadmap"),
-        6 => String::from("/community"),
+        3 => String::from("/stake"),
+        4 => String::from("/roadmap"),
+        5 => String::from("/community"),
         _ => String::from("/"),
     }
 }
@@ -445,21 +441,16 @@ fn get_dot(index: usize, lang: Translations) -> Html {
             </Tooltip>
         },
         3 => html! {
-            <Tooltip content=get_text(&menus[3]) tooltip_position=Position::Right>
-                {dots[3].clone()}
-            </Tooltip>
-        },
-        4 => html! {
             <Tooltip content=get_text(&menus[4]) tooltip_position=Position::Right>
                 {dots[4].clone()}
             </Tooltip>
         },
-        5 => html! {
+        4 => html! {
             <Tooltip content=get_text(&menus[5]) tooltip_position=Position::Right>
                 {dots[5].clone()}
             </Tooltip>
         },
-        6 => html! {
+        5 => html! {
             <Tooltip content=get_text(&menus[6]) tooltip_position=Position::Right>
                 {dots[6].clone()}
             </Tooltip>
@@ -476,10 +467,9 @@ fn get_screen_index(screen: &str) -> usize {
     match screen {
         "/info" => 1,
         "/use-cases" => 2,
-        "/buy" => 3,
-        "/stake" => 4,
-        "/roadmap" => 5,
-        "/community" => 6,
+        "/stake" => 3,
+        "/roadmap" => 4,
+        "/community" => 5,
         &_ => 0,
     }
 }

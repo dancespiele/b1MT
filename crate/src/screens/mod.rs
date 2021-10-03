@@ -1,4 +1,3 @@
-pub mod buy;
 pub mod community;
 pub mod dots;
 pub mod home;
@@ -7,7 +6,6 @@ pub mod road_map;
 pub mod stake;
 pub mod use_cases;
 
-pub use self::buy::Buy;
 pub use self::community::Community;
 pub use self::dots::get_dots_icons;
 pub use self::home::Home;
