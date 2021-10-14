@@ -1,5 +1,8 @@
 .logo-main-page
-    width: 170px
+  height: 160px
+
+.logo-space
+  height: 144px
 
 .home
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), linear-gradient(58.99deg, #0A3639 1.5%, rgba(10, 54, 57, 0) 19.3%), radial-gradient(46.67% 96.14% at 8.18% 124.46%, #0A3639 15.66%, rgba(10, 54, 57, 0) 68.08%), radial-gradient(18.54% 38.2% at 95.05% 87.55%, #0A3639 19.18%, rgba(10, 54, 57, 0) 100%), radial-gradient(13.45% 39.49% at 8.28% 12.23%, #0A3639 0%, rgba(10, 54, 57, 0) 100%), radial-gradient(42.61% 143.5% at 65.05% 36.4%, #0A3639 12.86%, rgba(18, 99, 104, 0.5) 100%), conic-gradient(from 123.5deg at 65.36% 35.87%, #0A3639 0deg, rgba(18, 99, 104, 0.46) 256.87deg, #0A3639 360deg)
@@ -9,7 +12,7 @@
   margin-left: 100px
 
 .home-description
-  padding: 20px
+  padding: 20px 10px 0
   background: rgba(255, 255, 255, 0.3)
   box-shadow: 0px 0px 5px 5px rgba(10, 54, 57, 0.35)
   border-radius: 15px
@@ -40,14 +43,14 @@
   color: #D7DF71
 
 .slogan-description
-  font-size: 30px
+  font-size: 26px
   text-align: left
   color: #FFFFFF
-  line-height: 46px
+  line-height: 40px
   opacity: 0.7
 
 .moon-target
-  margin-bottom: 34%
+  margin-bottom: 38%
   img
     top: 55px
     position: absolute
@@ -56,6 +59,10 @@
 
     &:first-of-type
       z-index: 2
+
+@-moz-document url-prefix()
+  .moon-target
+    margin-bottom: 36%
 
 @media (max-width: 1680px)
   .slogan
@@ -70,7 +77,7 @@
     width: 100px
 
   .moon-target
-    margin-bottom: 36%
+    margin-bottom: 38%
 
     img
       height: 65%
@@ -81,6 +88,10 @@
 
   .home-parragraph
     font-size: 16px
+
+  @-moz-document url-prefix()
+    .moon-target
+      margin-bottom: 50%
 
 @media (max-width: 1366px) and (max-height: 690px)
     .moon-target

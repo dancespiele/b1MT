@@ -4,7 +4,7 @@ pub struct Translations {
     pub tokenomics: String,
     pub use_cases: String,
     pub buy: String,
-    pub stake: String,
+    pub partners: String,
     pub road_map: String,
     pub community: String,
     pub price: String,

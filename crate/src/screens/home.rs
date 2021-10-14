@@ -72,7 +72,7 @@ impl Component for Home {
                             justify_content=JustifyContent::Center(Mode::NoMode)
                         >
                             <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(4))>
-                                <img class="logo-main-page" src="/P1MTMoon2b.png" />
+                                <img class="logo-space" src="/P1MTMoon2b.png" />
                             </Item>
                             <Item layouts=vec!(ItemLayout::ItXs(12), ItemLayout::ItL(7)) align_self=AlignSelf::FlexStart class_name="home-parragraph">
                                 <p>{self.lang.community_project.clone()}</p>

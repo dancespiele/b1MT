@@ -1,7 +1,7 @@
 use crate::config::Config;
 use crate::lang::Translations;
 use crate::screens::get_dots_icons;
-use crate::screens::{Community, Home, Info, RoadMap, Stake, UseCases};
+use crate::screens::{Community, Home, Info, Partners, RoadMap, UseCases};
 use crate::store::{RequestCoingecko, TokenInfo, TokenInfoStore};
 use crate::utils::{set_scroll_style, ScrollStyle};
 use gloo::timers::callback::{Interval, Timeout};
@@ -53,8 +53,8 @@ pub enum AppRouter {
     InfoPath,
     #[to = "/use-cases"]
     UseCasesPath,
-    #[to = "/stake"]
-    StakePath,
+    #[to = "/partners"]
+    PartnersPath,
     #[to = "/roadmap"]
     RoadMapPath,
     #[to = "/community"]
@@ -291,7 +291,7 @@ impl Component for App {
                                     class_name="container-1mt"
                                 >
                                     <div class="logo-1mt">
-                                        <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.svg"/><span>{"1MT ETH"}</span></a>
+                                        <a class=classes!("marketing") href="https://1milliontoken.org/" target="_blank"><img src="/1MTp.svg"/><span class=classes!("token-label")>{"1MT ETH"}</span></a>
                                     </div>
                                     <div class="logo-swap">
                                         <a class=classes!("marketing") href="https://swap.b1mt.network/" target="_blank"><img src="/buy.svg"/><span>{"Buy b1MT"}</span></a>
@@ -337,7 +337,7 @@ impl Component for App {
                                                 AppRouter::UseCasesPath => html! {
                                                     <UseCases/>
                                                 },
-                                                AppRouter::StakePath => html!{<Stake/>},
+                                                AppRouter::PartnersPath => html!{<Partners/>},
                                                 AppRouter::RoadMapPath => html!{<RoadMap/>},
                                                 AppRouter::CommunityPath => html!{<Community/>},
                                                 AppRouter::PageNotFound(Permissive(None)) => html!{<h1>{"Page not found"}</h1>},
@@ -364,7 +364,7 @@ fn get_navbar(items: Vec<bool>, lang: Translations, link: ComponentLink<App>) ->
         lang.home,
         lang.tokenomics,
         lang.use_cases,
-        lang.stake,
+        lang.partners,
         lang.road_map,
         lang.community,
     ];
@@ -404,7 +404,7 @@ fn get_route(index: usize) -> String {
         0 => String::from("/"),
         1 => String::from("/info"),
         2 => String::from("/use-cases"),
-        3 => String::from("/stake"),
+        3 => String::from("/partners"),
         4 => String::from("/roadmap"),
         5 => String::from("/community"),
         _ => String::from("/"),
@@ -417,7 +417,7 @@ fn get_dot(index: usize, lang: Translations) -> Html {
         lang.tokenomics,
         lang.use_cases,
         lang.buy,
-        lang.stake,
+        lang.partners,
         lang.road_map,
         lang.community,
     ];
@@ -467,7 +467,7 @@ fn get_screen_index(screen: &str) -> usize {
     match screen {
         "/info" => 1,
         "/use-cases" => 2,
-        "/stake" => 3,
+        "/partners" => 3,
         "/roadmap" => 4,
         "/community" => 5,
         &_ => 0,
