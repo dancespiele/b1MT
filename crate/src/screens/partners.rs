@@ -45,13 +45,13 @@ impl Component for Partners {
 }
 
 fn get_cards() -> Html {
-    let partners_titles = vec!["The Token Kennel", "Yield Field" , "Money Time"];
+    let partners_titles = vec!["The Token Kennel", "Yield Field", "Monetary Unit"];
     let partners_url = vec![
         "https://thetokenkennel.com/boarding/#/",
         "https://yieldfields.finance",
-        "https://moneytime.finance/",
+        "https://www.monetaryunit.org",
     ];
-    let icon_src = vec!["/token_kennel.png", "/yieldfields.png", "/money_time.png"];
+    let icon_src = vec!["/token_kennel.png", "/yieldfields.png", "/monetaryunit.png"];
 
     partners_titles
         .into_iter()
